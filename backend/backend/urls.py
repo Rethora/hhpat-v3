@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from todo import views as todo_views
 from entry import views as entry_views
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -21,7 +20,6 @@ schema_view = get_schema_view(
 )
 
 router = routers.DefaultRouter()
-router.register(r"todos", todo_views.TodoView, "todo")
 router.register(r"entries", entry_views.EntryView, "entry")
 
 urlpatterns = [

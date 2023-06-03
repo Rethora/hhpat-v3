@@ -1,16 +1,14 @@
 import axios from "axios";
 import { createRefresh } from "react-auth-kit";
+import { apiRoutes } from "./apiRoutes";
+import { BASE_API_URL, apiTokenInfo } from "utils/config";
 
 export const refreshApi = createRefresh({
   interval: 10, // Refreshes the token in every 10 minutes
   // @ts-ignore # tf?
   refreshApiCallback: async ({
-    // arguments
     authToken,
-    authTokenExpireAt,
     refreshToken,
-    refreshTokenExpiresAt,
-    authUserState,
   }) => {
     try {
       const {
@@ -19,7 +17,7 @@ export const refreshApi = createRefresh({
         access: string;
         refresh: string;
       }>(
-        "http://localhost:8080/token/refresh/",
+        BASE_API_URL + apiRoutes.authentication.tokenRefresh,
         { refresh: refreshToken },
         {
           headers: { Authorization: `Bearer ${authToken}` },
@@ -29,8 +27,8 @@ export const refreshApi = createRefresh({
         isSuccess: true,
         newAuthToken: access,
         newRefreshToken: refresh,
-        newAuthTokenExpireIn: authTokenExpireAt,
-        newRefreshTokenExpiresIn: refreshTokenExpiresAt,
+        newAuthTokenExpireIn: apiTokenInfo.access.expiresIn,
+        newRefreshTokenExpiresIn: apiTokenInfo.refresh.expiresIn,
       };
     } catch (error) {
       console.error(error);

@@ -10,13 +10,17 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { useSignIn } from "react-auth-kit";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { IconButton } from "@mui/material";
 import { VisibilityOffRounded, VisibilityRounded } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
 import { Copyright } from "components/Copyright";
+import { apiRoutes } from "routes/apiRoutes";
+import { useApi } from "hooks/useApi";
+import { apiTokenInfo } from "utils/config";
 
 export const SignIn = () => {
+  const { fetchNonAuthenticated } = useApi();
   const signIn = useSignIn();
   const { enqueueSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -27,23 +31,40 @@ export const SignIn = () => {
     try {
       const {
         data: { access, refresh },
-      } = await axios.post<{ access: string; refresh: string }>(
-        "http://localhost:8080/token/",
-        {
-          username: data.get("username"),
-          password: data.get("password"),
-        }
-      );
+      } = await fetchNonAuthenticated.post<{
+        access: string;
+        refresh: string;
+      }>(apiRoutes.authentication.signin, {
+        username: data.get("username"),
+        password: data.get("password"),
+      });
 
-      // TODO: add to response
+      const {
+        data: { username, first_name, last_name, is_staff, is_superuser },
+      } = await fetchNonAuthenticated.get<{
+        username: string;
+        first_name: string;
+        last_name: string;
+        is_staff: boolean;
+        is_superuser: boolean;
+      }>(apiRoutes.authentication.userSummary, {
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      });
+
       signIn({
         token: access,
-        expiresIn: 10,
+        expiresIn: apiTokenInfo.access.expiresIn,
         refreshToken: refresh,
-        refreshTokenExpireIn: 60,
+        refreshTokenExpireIn: apiTokenInfo.refresh.expiresIn,
         tokenType: "Bearer",
         authState: {
-          username: data.get("username"),
+          username,
+          firstName: first_name,
+          lastName: last_name,
+          isStaff: is_staff,
+          isSuperuser: is_superuser,
         },
       });
     } catch (error) {

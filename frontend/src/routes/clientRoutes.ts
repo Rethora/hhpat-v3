@@ -6,6 +6,7 @@ export const clientRoutes = {
   nonAdmin: {},
   admin: {},
   authShared: {
-    dashboard: "/dashboard"
+    dashboard: "/dashboard",
+    profile: "/profile",
   },
 };

@@ -1,7 +1,7 @@
 export const clientRoutes = {
   public: {
     root: "/",
-    signIn: "sign-in",
+    signIn: "/sign-in",
   },
   nonAdmin: {},
   admin: {},

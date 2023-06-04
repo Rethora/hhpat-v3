@@ -1,15 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import reportWebVitals from "./reportWebVitals";
+import { AuthProvider } from "react-auth-kit";
+import { AppRoutes } from "routes/AppRoutes";
+import { refreshApi } from "routes/refreshApi";
+import { SnackbarProvider } from "notistack";
+
+import "./index.css";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider
+      authType="cookie"
+      authName="_auth"
+      cookieDomain={window.location.hostname}
+      cookieSecure={window.location.protocol === "https:"}
+      refresh={refreshApi}
+    >
+        <SnackbarProvider>
+          <AppRoutes />
+        </SnackbarProvider>
+    </AuthProvider>
   </React.StrictMode>
 );
 

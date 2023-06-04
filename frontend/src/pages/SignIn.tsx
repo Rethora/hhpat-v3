@@ -1,23 +1,41 @@
-import * as React from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import React from "react";
 import { useSignIn } from "react-auth-kit";
 import { AxiosError } from "axios";
-import { IconButton } from "@mui/material";
-import { VisibilityOffRounded, VisibilityRounded } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
-import { Copyright } from "components/Copyright";
 import { apiRoutes } from "routes/apiRoutes";
 import { useApi } from "hooks/useApi";
 import { apiTokenInfo } from "utils/config";
+import { isEmpty } from "lodash";
+import { Formik } from "formik";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { Input } from "components/Input";
+import { InputAdornment } from "components/InputAdornmnent";
+import { IconButton } from "components/IconButton";
+import { PositiveButton } from "components/PositiveButton";
+
+interface IFormValues {
+  username: string;
+  password: string;
+}
+
+const initialValues: IFormValues = {
+  username: "",
+  password: "",
+};
+
+const validate = (values: IFormValues) => {
+  const errors: IFormValues = {} as IFormValues;
+
+  if (isEmpty(values.username)) {
+    errors.username = "Required";
+  }
+  if (isEmpty(values.password)) {
+    errors.password = "Required";
+  }
+
+  return errors;
+};
 
 export const SignIn = () => {
   const { fetchNonAuthenticated } = useApi();
@@ -25,9 +43,7 @@ export const SignIn = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const onSubmit = async (values: IFormValues) => {
     try {
       const {
         data: { access, refresh },
@@ -35,8 +51,8 @@ export const SignIn = () => {
         access: string;
         refresh: string;
       }>(apiRoutes.authentication.signin, {
-        username: data.get("username"),
-        password: data.get("password"),
+        username: values.username,
+        password: values.password,
       });
 
       const {
@@ -82,83 +98,72 @@ export const SignIn = () => {
 
   return (
     <React.Fragment>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              autoComplete="username"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              id="password"
-              autoComplete="current-password"
-              InputProps={{
-                endAdornment: (
-                  <IconButton onClick={() => setShowPassword(!showPassword)}>
-                    {showPassword ? (
-                      <VisibilityOffRounded />
-                    ) : (
-                      <VisibilityRounded />
-                    )}
-                  </IconButton>
-                ),
-              }}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
-      </Container>
+      <Formik
+        initialValues={initialValues}
+        validate={validate}
+        onSubmit={onSubmit}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+        }) => (
+          <div className="flex h-3/4 items-center justify-center">
+            <form onSubmit={handleSubmit}>
+              <div className="input-with-error">
+                <Input
+                  name="username"
+                  placeholder="Username"
+                  aria-label="username"
+                  type="text"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.username}
+                  autoComplete="username"
+                  autoFocus
+                />
+                <span className="error-span">
+                  {errors.username && touched.username && errors.username}
+                </span>
+              </div>
+              <div className="input-with-error">
+                <Input
+                  name="password"
+                  placeholder="Password"
+                  aria-label="password"
+                  type={showPassword ? "text" : "password"}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
+                  autoComplete="current-password"
+                  endAdornment={
+                    <InputAdornment>
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <FontAwesomeIcon width={20} icon={faEyeSlash} />
+                        ) : (
+                          <FontAwesomeIcon width={20} icon={faEye} />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+                <span className="error-span">
+                  {errors.password && touched.password && errors.password}
+                </span>
+              </div>
+              <div className="flex justify-end">
+                <PositiveButton type="submit">Sign In</PositiveButton>
+              </div>
+            </form>
+          </div>
+        )}
+      </Formik>
     </React.Fragment>
   );
 };

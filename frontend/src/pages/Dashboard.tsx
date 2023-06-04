@@ -1,1 +1,3 @@
-export const Dashboard = () => <>Dashboard</>;
+export const Dashboard = () => {
+  return <></>;
+};

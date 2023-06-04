@@ -1,3 +1,23 @@
+import { useApi } from "hooks/useApi";
+import { apiRoutes } from "routes/apiRoutes";
+
 export const Root = () => {
-  return <></>;
+  const { fetchAuthenticated } = useApi();
+
+  return (
+    <>
+        <button
+          onClick={() => {
+            fetchAuthenticated
+              .get(apiRoutes.userEntries.all)
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((error) => console.error(error));
+          }}
+        >
+          Click me
+        </button>
+    </>
+  );
 };

@@ -8,6 +8,7 @@ import { SignIn } from "pages/SignIn";
 import { Dashboard } from "pages/Dashboard";
 import { clientRoutes } from "./clientRoutes";
 import { Root } from "pages/Root";
+import { AppContainer } from "components/AppContainer";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
@@ -39,5 +40,9 @@ export const AppRoutes = () => {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <AppContainer>
+      <RouterProvider router={router} />
+    </AppContainer>
+  );
 };

@@ -6,14 +6,8 @@ import { AuthProvider } from "react-auth-kit";
 import { AppRoutes } from "routes/AppRoutes";
 import { refreshApi } from "routes/refreshApi";
 import { SnackbarProvider } from "notistack";
-import { ThemeProvider } from "@mui/material";
-import { theme } from "utils/theme";
 
 import "./index.css";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -28,11 +22,9 @@ root.render(
       cookieSecure={window.location.protocol === "https:"}
       refresh={refreshApi}
     >
-      <ThemeProvider theme={theme}>
         <SnackbarProvider>
           <AppRoutes />
         </SnackbarProvider>
-      </ThemeProvider>
     </AuthProvider>
   </React.StrictMode>
 );

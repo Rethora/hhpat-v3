@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.error-span {
+  color: theme("colors.negative");
+}
+
+.input-with-error {
+  min-height: 65px;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",

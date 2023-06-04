@@ -13,6 +13,7 @@ import { Input } from "components/Input";
 import { InputAdornment } from "components/InputAdornmnent";
 import { IconButton } from "components/IconButton";
 import { PositiveButton } from "components/PositiveButton";
+import { Navbar } from "components/Navbar";
 
 interface IFormValues {
   username: string;
@@ -98,20 +99,22 @@ export const SignIn = () => {
 
   return (
     <React.Fragment>
-      <Formik
-        initialValues={initialValues}
-        validate={validate}
-        onSubmit={onSubmit}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-        }) => (
-          <div className="flex h-3/4 items-center justify-center">
+      <Navbar />
+      <div className="flex flex-col h-3/4 items-center justify-center">
+        <h1>Sign In</h1>
+        <Formik
+          initialValues={initialValues}
+          validate={validate}
+          onSubmit={onSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+          }) => (
             <form onSubmit={handleSubmit}>
               <div className="input-with-error">
                 <Input
@@ -161,9 +164,9 @@ export const SignIn = () => {
                 <PositiveButton type="submit">Sign In</PositiveButton>
               </div>
             </form>
-          </div>
-        )}
-      </Formik>
+          )}
+        </Formik>
+      </div>
     </React.Fragment>
   );
 };

@@ -115,7 +115,7 @@ export const SignIn = () => {
               <div className="input-with-error">
                 <Input
                   name="username"
-                  placeholder="Username"
+                  placeholder="Email or Username"
                   aria-label="username"
                   type="text"
                   onChange={handleChange}

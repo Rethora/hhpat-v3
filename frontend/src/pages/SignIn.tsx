@@ -99,8 +99,7 @@ export const SignIn = () => {
 
   return (
     <React.Fragment>
-      <Navbar />
-      <div className="flex flex-col h-3/4 items-center justify-center">
+      <div className="flex h-3/4 flex-col items-center justify-center">
         <h1>Sign In</h1>
         <Formik
           initialValues={initialValues}

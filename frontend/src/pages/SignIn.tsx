@@ -3,7 +3,7 @@ import { useSignIn } from "react-auth-kit";
 import { AxiosError } from "axios";
 import { useSnackbar } from "notistack";
 import { apiRoutes } from "routes/apiRoutes";
-import { useApi } from "hooks/useApi";
+import { useFetch } from "hooks/useFetch";
 import { apiTokenInfo } from "utils/config";
 import { isEmpty } from "lodash";
 import { Formik } from "formik";
@@ -39,7 +39,7 @@ const validate = (values: IFormValues) => {
 };
 
 export const SignIn = () => {
-  const { fetchNonAuthenticated } = useApi();
+  const { fetchNonAuthenticated } = useFetch();
   const signIn = useSignIn();
   const { enqueueSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = React.useState(false);

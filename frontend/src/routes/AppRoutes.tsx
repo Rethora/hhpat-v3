@@ -9,9 +9,12 @@ import { Dashboard } from "pages/Dashboard";
 import { clientRoutes } from "./clientRoutes";
 import { Root } from "pages/Root";
 import { AppContainer } from "components/AppContainer";
+import { useFetch } from "hooks/useFetch";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
+  const auth = useAuthUser();
+  const { fetchAuthenticated } = useFetch();
 
   const router = createBrowserRouter([
     {

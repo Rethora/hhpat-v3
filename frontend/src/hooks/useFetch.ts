@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthHeader } from "react-auth-kit";
 import { BASE_API_URL } from "utils/config";
 
-export const useApi = () => {
+export const useFetch = () => {
   const authHeader = useAuthHeader();
 
   axios.defaults.baseURL = BASE_API_URL;

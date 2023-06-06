@@ -13,7 +13,7 @@ import { Input } from "components/Input";
 import { InputAdornment } from "components/InputAdornmnent";
 import { IconButton } from "components/IconButton";
 import { PositiveButton } from "components/PositiveButton";
-import { Navbar } from "components/Navbar";
+import { IUserResponse } from "types";
 
 interface IFormValues {
   username: string;
@@ -58,17 +58,14 @@ export const SignIn = () => {
 
       const {
         data: { username, first_name, last_name, is_staff, is_superuser },
-      } = await fetchNonAuthenticated.get<{
-        username: string;
-        first_name: string;
-        last_name: string;
-        is_staff: boolean;
-        is_superuser: boolean;
-      }>(apiRoutes.authentication.userSummary, {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      } = await fetchNonAuthenticated.get<IUserResponse>(
+        apiRoutes.authentication.userSummary,
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
 
       signIn({
         token: access,

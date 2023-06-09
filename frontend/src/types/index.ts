@@ -1,6 +1,6 @@
 // * interfaces
-export interface IUserResponse {
-  pk: number;
+export interface IUser {
+  id: number;
   email: string;
   username: string;
   first_name: string;
@@ -12,7 +12,7 @@ export interface IUserResponse {
 
 // * enums
 export enum ELoadingStatus {
-  PENDING,
+  IDLE,
   LOADING,
   FULFILLED,
   FAILED,

@@ -1,15 +1,14 @@
-import { AxiosError } from "axios";
 import { Input } from "components/Input";
 import { PositiveButton } from "components/PositiveButton";
+import { createUser } from "features/user/userSlicer";
 import { Formik } from "formik";
+import { useAppDispatch } from "hooks/useAppDispatch";
 import { useFetch } from "hooks/useFetch";
 import { isEmpty } from "lodash";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { apiRoutes } from "routes/apiRoutes";
 import { clientRoutes } from "routes/clientRoutes";
-import { IUserResponse } from "types";
 
 interface IFormValues {
   first_name: string;
@@ -45,26 +44,24 @@ export const NewUser = () => {
   const { fetchAuthenticated } = useFetch();
   const { enqueueSnackbar } = useSnackbar();
   const [newUserId, setNewUserId] = React.useState<number | null>(null);
+  const dispatch = useAppDispatch();
 
   const onSubmit = async (values: IFormValues) => {
-    try {
-      const { data } = await fetchAuthenticated.post<IUserResponse>(
-        apiRoutes.admin.users,
-        { ...values, username: values.email }
-      );
+    const res = await dispatch(
+      createUser({
+        fetchMethod: fetchAuthenticated,
+        payload: { ...values, username: values.email },
+      })
+    );
 
-      setNewUserId(data.pk);
-    } catch (error) {
-      console.error(error);
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 400) {
-          enqueueSnackbar({
-            variant: "error",
-            message: error.message,
-          });
-        }
-      }
+    const id = res.payload?.id;
+
+    if (!id) {
+      enqueueSnackbar({ message: "Couldn't create user", variant: "error" });
+      return;
     }
+
+    setNewUserId(+id);
   };
 
   return (

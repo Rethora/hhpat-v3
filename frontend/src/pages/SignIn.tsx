@@ -13,7 +13,7 @@ import { Input } from "components/Input";
 import { InputAdornment } from "components/InputAdornmnent";
 import { IconButton } from "components/IconButton";
 import { PositiveButton } from "components/PositiveButton";
-import { IUserResponse } from "types";
+import { IUser } from "types";
 
 interface IFormValues {
   username: string;
@@ -58,7 +58,7 @@ export const SignIn = () => {
 
       const {
         data: { username, first_name, last_name, is_staff, is_superuser },
-      } = await fetchNonAuthenticated.get<IUserResponse>(
+      } = await fetchNonAuthenticated.get<IUser>(
         apiRoutes.authentication.userSummary,
         {
           headers: {
@@ -123,6 +123,7 @@ export const SignIn = () => {
                   value={values.username}
                   autoComplete="username"
                   autoFocus
+                  required
                 />
                 <span className="error-span">
                   {errors.username && touched.username && errors.username}
@@ -138,6 +139,7 @@ export const SignIn = () => {
                   onBlur={handleBlur}
                   value={values.password}
                   autoComplete="current-password"
+                  required
                   endAdornment={
                     <InputAdornment>
                       <IconButton

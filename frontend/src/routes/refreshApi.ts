@@ -4,12 +4,9 @@ import { apiRoutes } from "./apiRoutes";
 import { BASE_API_URL, apiTokenInfo } from "utils/config";
 
 export const refreshApi = createRefresh({
-  interval: 10, // Refreshes the token in every 10 minutes
+  interval: apiTokenInfo.access.expiresIn,
   // @ts-ignore # tf?
-  refreshApiCallback: async ({
-    authToken,
-    refreshToken,
-  }) => {
+  refreshApiCallback: async ({ authToken, refreshToken }) => {
     try {
       const {
         data: { access, refresh },

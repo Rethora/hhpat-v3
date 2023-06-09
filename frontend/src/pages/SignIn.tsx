@@ -3,7 +3,7 @@ import { useSignIn } from "react-auth-kit";
 import { AxiosError } from "axios";
 import { useSnackbar } from "notistack";
 import { apiRoutes } from "routes/apiRoutes";
-import { useApi } from "hooks/useApi";
+import { useFetch } from "hooks/useFetch";
 import { apiTokenInfo } from "utils/config";
 import { isEmpty } from "lodash";
 import { Formik } from "formik";
@@ -13,7 +13,7 @@ import { Input } from "components/Input";
 import { InputAdornment } from "components/InputAdornmnent";
 import { IconButton } from "components/IconButton";
 import { PositiveButton } from "components/PositiveButton";
-import { Navbar } from "components/Navbar";
+import { IUser } from "types";
 
 interface IFormValues {
   username: string;
@@ -39,7 +39,7 @@ const validate = (values: IFormValues) => {
 };
 
 export const SignIn = () => {
-  const { fetchNonAuthenticated } = useApi();
+  const { fetchNonAuthenticated } = useFetch();
   const signIn = useSignIn();
   const { enqueueSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = React.useState(false);
@@ -58,17 +58,14 @@ export const SignIn = () => {
 
       const {
         data: { username, first_name, last_name, is_staff, is_superuser },
-      } = await fetchNonAuthenticated.get<{
-        username: string;
-        first_name: string;
-        last_name: string;
-        is_staff: boolean;
-        is_superuser: boolean;
-      }>(apiRoutes.authentication.userSummary, {
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      });
+      } = await fetchNonAuthenticated.get<IUser>(
+        apiRoutes.authentication.userSummary,
+        {
+          headers: {
+            Authorization: `Bearer ${access}`,
+          },
+        }
+      );
 
       signIn({
         token: access,
@@ -99,8 +96,7 @@ export const SignIn = () => {
 
   return (
     <React.Fragment>
-      <Navbar />
-      <div className="flex flex-col h-3/4 items-center justify-center">
+      <div className="flex h-3/4 flex-col items-center justify-center">
         <h1>Sign In</h1>
         <Formik
           initialValues={initialValues}
@@ -119,7 +115,7 @@ export const SignIn = () => {
               <div className="input-with-error">
                 <Input
                   name="username"
-                  placeholder="Username"
+                  placeholder="Email or Username"
                   aria-label="username"
                   type="text"
                   onChange={handleChange}
@@ -127,6 +123,7 @@ export const SignIn = () => {
                   value={values.username}
                   autoComplete="username"
                   autoFocus
+                  required
                 />
                 <span className="error-span">
                   {errors.username && touched.username && errors.username}
@@ -142,6 +139,7 @@ export const SignIn = () => {
                   onBlur={handleBlur}
                   value={values.password}
                   autoComplete="current-password"
+                  required
                   endAdornment={
                     <InputAdornment>
                       <IconButton

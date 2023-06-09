@@ -16,5 +16,11 @@ class UserEntryView(viewsets.ReadOnlyModelViewSet):
 
 class AdminEntryView(viewsets.ModelViewSet):
     serializer_class = EntrySerializer
-    queryset = Entry.objects.all()
     permission_classes = [IsAdminUser]
+
+    def get_queryset(self):
+        queryset = Entry.objects.all()
+        user = self.request.query_params.get("user")
+        if user is not None:
+            queryset = queryset.filter(user=user)
+        return queryset

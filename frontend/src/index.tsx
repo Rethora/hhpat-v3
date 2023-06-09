@@ -6,8 +6,10 @@ import { AuthProvider } from "react-auth-kit";
 import { AppRoutes } from "routes/AppRoutes";
 import { refreshApi } from "routes/refreshApi";
 import { SnackbarProvider } from "notistack";
+import { Provider } from "react-redux";
 
 import "./index.css";
+import { store } from "utils/store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -15,17 +17,19 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <AuthProvider
-      authType="cookie"
-      authName="_auth"
-      cookieDomain={window.location.hostname}
-      cookieSecure={window.location.protocol === "https:"}
-      refresh={refreshApi}
-    >
+    <Provider store={store}>
+      <AuthProvider
+        authType="cookie"
+        authName="_auth"
+        cookieDomain={window.location.hostname}
+        cookieSecure={window.location.protocol === "https:"}
+        refresh={refreshApi}
+      >
         <SnackbarProvider>
           <AppRoutes />
         </SnackbarProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </Provider>
   </React.StrictMode>
 );
 

@@ -1,7 +1,6 @@
 import {
   RouterProvider,
   createBrowserRouter,
-  defer,
   redirect,
 } from "react-router-dom";
 import { useAuthUser, useIsAuthenticated } from "react-auth-kit";
@@ -9,18 +8,15 @@ import { SignIn } from "pages/SignIn";
 import { Dashboard } from "pages/Dashboard";
 import { clientRoutes } from "./clientRoutes";
 import { AppContainer } from "components/AppContainer";
-import { NewUser } from "pages/NewUser";
 import { ShowUser } from "pages/ShowUser";
-import { useFetch } from "hooks/useFetch";
-import { apiRoutes } from "./apiRoutes";
-import { IUserResponse } from "types";
 import { RootLayout } from "layouts/RootLayout";
 import { AllUsers } from "pages/AllUsers";
+import { AdminLayout } from "layouts/AdminLayout";
+import { NewUser } from "pages/NewUser";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
   const auth = useAuthUser();
-  const { fetchAuthenticated } = useFetch();
 
   const router = createBrowserRouter([
     {
@@ -48,42 +44,31 @@ export const AppRoutes = () => {
           },
         },
         {
-          path: clientRoutes.admin.users,
+          path: clientRoutes.admin.admin,
+          element: <AdminLayout />,
           loader: () => {
-            const authUser = auth();
-            if (!isAuthenticated() || !authUser) {
+            if (!isAuthenticated()) {
               return redirect(clientRoutes.public.signIn);
-            } else if (authUser && !authUser.isStaff) {
-              return redirect(clientRoutes.authShared.dashboard);
+            } else {
+              const authUser = auth();
+              if (authUser && !authUser.isStaff) {
+                return redirect(clientRoutes.authShared.dashboard);
+              }
             }
             return null;
           },
           children: [
             {
-              path: "new",
+              path: "users/new/",
               element: <NewUser />,
             },
             {
-              path: "all",
+              path: "users/all/",
               element: <AllUsers />,
-              loader: async () => {
-                const usersPromise = fetchAuthenticated.get<IUserResponse[]>(
-                  apiRoutes.admin.users
-                );
-
-                return defer({ users: usersPromise });
-              },
             },
             {
-              path: ":userId",
+              path: "users/:userId/",
               element: <ShowUser />,
-              loader: async ({ params }) => {
-                const userPromise = fetchAuthenticated.get<IUserResponse>(
-                  `${apiRoutes.admin.users}${params.userId}/`
-                );
-
-                return defer({ user: userPromise });
-              },
             },
           ],
         },

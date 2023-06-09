@@ -5,9 +5,10 @@ export const clientRoutes = {
   },
   nonAdmin: {},
   admin: {
-    users: "/users/",
-    allUsers: "/users/all/",
-    newUser: "/users/new/",
+    admin: "/admin/",
+    users: "/admin/users/",
+    allUsers: "/admin/users/all/",
+    newUser: "/admin/users/new/",
   },
   authShared: {
     dashboard: "/dashboard/",

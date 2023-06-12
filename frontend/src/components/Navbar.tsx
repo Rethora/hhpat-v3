@@ -5,6 +5,7 @@ import { ReactElement } from "react";
 import { useAuthUser, useIsAuthenticated, useSignOut } from "react-auth-kit";
 import { Link, useLocation } from "react-router-dom";
 import { clientRoutes } from "routes/clientRoutes";
+import { IUser } from "types";
 
 interface INavItem {
   label: string;
@@ -53,9 +54,9 @@ export const Navbar = () => {
   const isSignedIn = React.useMemo(() => isAuthenticated(), [isAuthenticated]);
 
   const isAdmin = React.useMemo(() => {
-    const authUser = auth();
+    const authUser = auth() as IUser;
     if (isAuthenticated() && authUser) {
-      return Boolean(authUser.is_staff);
+      return authUser.is_staff;
     }
     return false;
   }, [auth, isAuthenticated]);

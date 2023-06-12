@@ -15,6 +15,7 @@ import { AdminLayout } from "layouts/AdminLayout";
 import { NewUser } from "pages/NewUser";
 import { AuthLayout } from "layouts/AuthLayout";
 import { AdminDashboard } from "pages/AdminDashboard";
+import { IUser } from "types";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
@@ -23,9 +24,9 @@ export const AppRoutes = () => {
   const isSignedIn = React.useMemo(() => isAuthenticated(), [isAuthenticated]);
 
   const isAdmin = React.useMemo(() => {
-    const authUser = auth();
+    const authUser = auth() as IUser;
     if (isAuthenticated() && authUser) {
-      return Boolean(authUser.is_staff);
+      return authUser.is_staff;
     }
     return false;
   }, [auth, isAuthenticated]);

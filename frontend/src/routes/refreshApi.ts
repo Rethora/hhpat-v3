@@ -1,40 +1,33 @@
-import axios from "axios";
 import { createRefresh } from "react-auth-kit";
 import { apiRoutes } from "./apiRoutes";
-import { BASE_API_URL, apiTokenInfo } from "utils/config";
+import { ACCESS_TOKEN_EXPIRE_IN, REFRESH_TOKEN_EXPIRE_IN } from "utils/config";
+import { fetchNonAuthenticated } from "./fetch";
+import { IToken } from "types";
 
 export const refreshApi = createRefresh({
-  interval:
-    process.env.NODE_ENV === "development"
-      ? 1
-      : apiTokenInfo.access.expiresIn - 1,
-  // @ts-ignore # tf?
-  refreshApiCallback: async ({ authToken, refreshToken }) => {
+  interval: 30,
+  refreshApiCallback: async ({ refreshToken }) => {
     try {
       const {
         data: { access, refresh },
-      } = await axios.post<{
-        access: string;
-        refresh: string;
-      }>(
-        BASE_API_URL + apiRoutes.authentication.tokenRefresh,
-        { refresh: refreshToken },
+      } = await fetchNonAuthenticated.post<IToken>(
+        apiRoutes.authentication.tokenRefresh,
         {
-          headers: { Authorization: `Bearer ${authToken}` },
+          refresh: refreshToken,
         }
       );
-      return {
-        isSuccess: true,
-        newAuthToken: access,
-        newRefreshToken: refresh,
-        newAuthTokenExpireIn: apiTokenInfo.access.expiresIn,
-        newRefreshTokenExpiresIn: apiTokenInfo.refresh.expiresIn,
-      };
+
+      return new Promise(resolve => {
+        resolve({
+          isSuccess: true,
+          newAuthToken: access,
+          newRefreshToken: refresh,
+          newAuthTokenExpireIn: ACCESS_TOKEN_EXPIRE_IN,
+          newRefreshTokenExpiresIn: REFRESH_TOKEN_EXPIRE_IN,
+        });
+      });
     } catch (error) {
-      console.error(error);
-      return {
-        isSuccess: false,
-      };
+      return new Promise((_, reject) => reject({ isSuccess: false }));
     }
   },
 });

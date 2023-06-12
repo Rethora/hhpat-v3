@@ -3,7 +3,11 @@ import { signInFunctionParams } from "react-auth-kit/dist/types";
 import { apiRoutes } from "routes/apiRoutes";
 import { fetchAuthenticated, fetchNonAuthenticated } from "routes/fetch";
 import { ELoadingStatus, IToken, IUser } from "types";
-import { apiTokenInfo } from "utils/config";
+import {
+  ACCESS_TOKEN_EXPIRE_IN,
+  REFRESH_TOKEN_EXPIRE_IN,
+  TOKEN_TYPE,
+} from "utils/config";
 import { RootState } from "utils/store";
 
 interface ILoadingStatus {
@@ -60,10 +64,10 @@ export const userSlicer = createSlice({
       state.loadingStatus.signUserIn.errorMessage = null;
       action.meta.arg.signIn({
         token: action.payload.access,
-        expiresIn: apiTokenInfo.access.expiresIn,
+        expiresIn: ACCESS_TOKEN_EXPIRE_IN,
         refreshToken: action.payload.refresh,
-        refreshTokenExpireIn: apiTokenInfo.refresh.expiresIn,
-        tokenType: apiTokenInfo.type,
+        refreshTokenExpireIn: REFRESH_TOKEN_EXPIRE_IN,
+        tokenType: TOKEN_TYPE,
         authState: action.payload.authState,
       });
     });
@@ -116,7 +120,7 @@ export const signUserIn = createAsyncThunk(
 
     const { data: authState } = await fetchNonAuthenticated.get<IUser>(
       apiRoutes.authentication.userSummary,
-      { headers: { Authorization: `${apiTokenInfo.type} ${access}` } }
+      { headers: { Authorization: `${TOKEN_TYPE} ${access}` } }
     );
 
     return {

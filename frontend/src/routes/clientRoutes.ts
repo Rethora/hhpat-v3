@@ -3,15 +3,17 @@ export const clientRoutes = {
     root: "/",
     signIn: "/sign-in/",
   },
-  nonAdmin: {},
+  nonAdmin: {
+    dashboard: "/user/dashboard/",
+  },
   admin: {
     admin: "/admin/",
+    dashboard: "/admin/dashboard/",
     users: "/admin/users/",
     allUsers: "/admin/users/all/",
     newUser: "/admin/users/new/",
   },
   authShared: {
-    dashboard: "/dashboard/",
     profile: "/profile/",
   },
 };

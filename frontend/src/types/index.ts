@@ -10,10 +10,15 @@ export interface IUser {
   entries: string[];
 }
 
+export interface IToken {
+  access: string;
+  refresh: string;
+}
+
 // * enums
 export enum ELoadingStatus {
   IDLE,
-  LOADING,
+  PENDING,
   FULFILLED,
-  FAILED,
+  REJECTED,
 }

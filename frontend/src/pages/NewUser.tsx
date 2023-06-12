@@ -1,25 +1,30 @@
 import { Input } from "components/Input";
 import { PositiveButton } from "components/PositiveButton";
-import { createUser } from "features/user/userSlicer";
+import { createUser, resetLoadingState } from "features/user/userSlicer";
 import { Formik } from "formik";
 import { useAppDispatch } from "hooks/useAppDispatch";
-import { useFetch } from "hooks/useFetch";
+import { useAppSelector } from "hooks/useAppSelector";
 import { isEmpty } from "lodash";
 import { useSnackbar } from "notistack";
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { clientRoutes } from "routes/clientRoutes";
+import { ELoadingStatus } from "types";
 
 interface IFormValues {
   first_name: string;
   last_name: string;
   email: string;
+  is_staff: boolean;
+  is_superuser: boolean;
 }
 
 const initialValues: IFormValues = {
   first_name: "",
   last_name: "",
   email: "",
+  is_staff: false,
+  is_superuser: false,
 };
 
 const validate = (values: IFormValues) => {
@@ -41,27 +46,38 @@ const validate = (values: IFormValues) => {
 };
 
 export const NewUser = () => {
-  const { fetchAuthenticated } = useFetch();
+  const dispatch = useAppDispatch();
+  const createUserLoadingStatus = useAppSelector(
+    state => state.users.loadingStatus.createUser
+  );
+  const users = useAppSelector(state => state.users.users);
   const { enqueueSnackbar } = useSnackbar();
   const [newUserId, setNewUserId] = React.useState<number | null>(null);
-  const dispatch = useAppDispatch();
 
-  const onSubmit = async (values: IFormValues) => {
-    const res = await dispatch(
-      createUser({
-        fetchMethod: fetchAuthenticated,
-        payload: { ...values, username: values.email },
-      })
-    );
+  React.useEffect(() => {
+    return () => {
+      dispatch(resetLoadingState("createUser"));
+    };
+  }, [dispatch]);
 
-    const id = res.payload?.id;
-
-    if (!id) {
-      enqueueSnackbar({ message: "Couldn't create user", variant: "error" });
-      return;
+  React.useEffect(() => {
+    if (createUserLoadingStatus.status === ELoadingStatus.FULFILLED) {
+      const newUser = users[users.length - 1];
+      setNewUserId(newUser.id);
     }
+  }, [createUserLoadingStatus.status, users]);
 
-    setNewUserId(+id);
+  React.useEffect(() => {
+    if (createUserLoadingStatus.errorMessage !== null) {
+      enqueueSnackbar({
+        message: createUserLoadingStatus.errorMessage,
+        variant: "error",
+      });
+    }
+  }, [createUserLoadingStatus.errorMessage, enqueueSnackbar]);
+
+  const onSubmit = (values: IFormValues) => {
+    dispatch(createUser({ ...values, username: values.email }));
   };
 
   return (

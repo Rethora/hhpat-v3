@@ -1,5 +1,8 @@
+import { reset } from "features/user/userSlicer";
+import { useAppDispatch } from "hooks/useAppDispatch";
+import React from "react";
 import { ReactElement } from "react";
-import { useIsAuthenticated, useSignOut } from "react-auth-kit";
+import { useAuthUser, useIsAuthenticated, useSignOut } from "react-auth-kit";
 import { Link, useLocation } from "react-router-dom";
 import { clientRoutes } from "routes/clientRoutes";
 
@@ -10,23 +13,16 @@ interface INavItem {
 }
 
 // TODO: responsive icons
-const loggedInItems: INavItem[] = [
-  {
-    label: "Dashboard",
-    path: clientRoutes.authShared.dashboard,
-    icon: <></>,
-  },
-  {
-    label: "Profile",
-    path: clientRoutes.authShared.profile,
-    icon: <></>,
-  },
+const defaultItems: INavItem[] = [
+  { label: "HHPAT", path: clientRoutes.public.root, icon: <></> },
 ];
 
-const loggedOutItems: INavItem[] = [];
+const nonAdminItems: INavItem[] = [
+  { label: "Dashboard", path: clientRoutes.nonAdmin.dashboard, icon: <></> },
+];
 
-const sharedItems: INavItem[] = [
-  { label: "HHPAT", path: clientRoutes.public.root, icon: <></> },
+const adminItems: INavItem[] = [
+  { label: "Dashboard", path: clientRoutes.admin.dashboard, icon: <></> },
 ];
 
 interface INavButtonProps {
@@ -35,13 +31,12 @@ interface INavButtonProps {
 
 const NavItem = ({ navItem }: INavButtonProps) => {
   const { pathname } = useLocation();
-
-  const isActive = pathname === navItem.path;
+  const isActive = React.useRef(pathname === navItem.path);
 
   return (
     <div
       className={`${
-        isActive && pathname !== "/" ? "underline" : "no-underline"
+        isActive.current && pathname !== "/" ? "underline" : "no-underline"
       } px-4`}
     >
       <Link to={navItem.path}>{navItem.label}</Link>
@@ -50,24 +45,54 @@ const NavItem = ({ navItem }: INavButtonProps) => {
 };
 
 export const Navbar = () => {
+  const dispatch = useAppDispatch();
   const isAuthenticated = useIsAuthenticated();
+  const auth = useAuthUser();
   const signOut = useSignOut();
 
-  const currentNavItems = isAuthenticated()
-    ? sharedItems.concat(loggedInItems)
-    : sharedItems.concat(loggedOutItems);
+  const isSignedIn = React.useMemo(() => isAuthenticated(), [isAuthenticated]);
+
+  const isAdmin = React.useMemo(() => {
+    const authUser = auth();
+    if (isAuthenticated() && authUser) {
+      return Boolean(authUser.is_staff);
+    }
+    return false;
+  }, [auth, isAuthenticated]);
+
+  const navItems = React.useMemo(() => {
+    const items: INavItem[] = [];
+
+    items.push(...defaultItems);
+
+    if (isSignedIn) {
+      if (isAdmin) {
+        items.push(...adminItems);
+      } else {
+        items.push(...nonAdminItems);
+      }
+    }
+
+    return items;
+  }, [isSignedIn, isAdmin]);
 
   return (
     <div className="navbar-shadow absolute left-0 top-0 h-14 w-screen bg-grey text-offWhite">
       <div className="flex h-full items-center justify-between">
         <div className="flex">
-          {currentNavItems.map((item) => (
+          {navItems.map(item => (
             <NavItem key={item.label} navItem={item} />
           ))}
         </div>
         <div>
-          {isAuthenticated() ? (
-            <div className="cursor-pointer px-4" onClick={() => signOut()}>
+          {isSignedIn ? (
+            <div
+              className="cursor-pointer px-4"
+              onClick={() => {
+                signOut();
+                dispatch(reset());
+              }}
+            >
               Sign Out
             </div>
           ) : (

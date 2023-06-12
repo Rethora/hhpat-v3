@@ -7,10 +7,10 @@ import { ELoadingStatus } from "types";
 export const AllUsers = () => {
   const users = useAppSelector(state => state.users.users);
   const fetchUsersLoadingStatus = useAppSelector(
-    state => state.users.loadingStatus.fetchUsers
+    state => state.users.loadingStatus.fetchUsers.status
   );
 
-  return fetchUsersLoadingStatus === ELoadingStatus.LOADING ? (
+  return fetchUsersLoadingStatus === ELoadingStatus.PENDING ? (
     <Loading />
   ) : (
     <>

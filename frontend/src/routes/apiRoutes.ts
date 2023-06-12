@@ -1,6 +1,6 @@
 export const apiRoutes = {
   authentication: {
-    signin: "/token/",
+    signIn: "/token/",
     userSummary: "/user-summary/",
     tokenRefresh: "/token/refresh/",
   },

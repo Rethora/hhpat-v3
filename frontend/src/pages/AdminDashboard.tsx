@@ -1,12 +1,10 @@
 import { faPlus, faUsers } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card } from "components/Card";
-import React from "react";
-import { useAuthUser } from "react-auth-kit";
 import { Link } from "react-router-dom";
 import { clientRoutes } from "routes/clientRoutes";
 
-const AdminLayout = () => (
+export const AdminDashboard = () => (
   <div className="flex w-full justify-between">
     <Link to={clientRoutes.admin.newUser}>
       <Card className="flex w-56 cursor-pointer items-center justify-center">
@@ -26,23 +24,3 @@ const AdminLayout = () => (
     </Link>
   </div>
 );
-
-export const Dashboard = () => {
-  const auth = useAuthUser();
-
-  const isAdmin = React.useMemo(() => {
-    const authUserState = auth();
-
-    if (authUserState) {
-      return authUserState.isStaff || authUserState.isSuperuser;
-    }
-
-    return false;
-  }, [auth]);
-
-  return (
-    <div className="flex justify-between pt-10">
-      {isAdmin && <AdminLayout />}
-    </div>
-  );
-};

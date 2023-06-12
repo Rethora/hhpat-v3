@@ -1,10 +1,6 @@
 import React from "react";
 import { useSignIn } from "react-auth-kit";
-import { AxiosError } from "axios";
 import { useSnackbar } from "notistack";
-import { apiRoutes } from "routes/apiRoutes";
-import { useFetch } from "hooks/useFetch";
-import { apiTokenInfo } from "utils/config";
 import { isEmpty } from "lodash";
 import { Formik } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +9,12 @@ import { Input } from "components/Input";
 import { InputAdornment } from "components/InputAdornmnent";
 import { IconButton } from "components/IconButton";
 import { PositiveButton } from "components/PositiveButton";
-import { IUser } from "types";
+import { ELoadingStatus } from "types";
+import { useAppDispatch } from "hooks/useAppDispatch";
+import { resetLoadingState, signUserIn } from "features/user/userSlicer";
+import { useAppSelector } from "hooks/useAppSelector";
+import { Loading } from "components/Loading";
+import { Center } from "components/Center";
 
 interface IFormValues {
   username: string;
@@ -39,60 +40,41 @@ const validate = (values: IFormValues) => {
 };
 
 export const SignIn = () => {
-  const { fetchNonAuthenticated } = useFetch();
+  const dispatch = useAppDispatch();
+  const signUserInLoadingStatus = useAppSelector(
+    state => state.users.loadingStatus.signUserIn
+  );
   const signIn = useSignIn();
   const { enqueueSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const onSubmit = async (values: IFormValues) => {
-    try {
-      const {
-        data: { access, refresh },
-      } = await fetchNonAuthenticated.post<{
-        access: string;
-        refresh: string;
-      }>(apiRoutes.authentication.signin, {
-        username: values.username,
-        password: values.password,
-      });
+  React.useEffect(() => {
+    return () => {
+      dispatch(resetLoadingState("signUserIn"));
+    };
+  }, [dispatch]);
 
-      const {
-        data: { username, first_name, last_name, is_staff, is_superuser },
-      } = await fetchNonAuthenticated.get<IUser>(
-        apiRoutes.authentication.userSummary,
-        {
-          headers: {
-            Authorization: `Bearer ${access}`,
-          },
-        }
-      );
-
-      signIn({
-        token: access,
-        expiresIn: apiTokenInfo.access.expiresIn,
-        refreshToken: refresh,
-        refreshTokenExpireIn: apiTokenInfo.refresh.expiresIn,
-        tokenType: "Bearer",
-        authState: {
-          username,
-          firstName: first_name,
-          lastName: last_name,
-          isStaff: is_staff,
-          isSuperuser: is_superuser,
-        },
+  React.useEffect(() => {
+    if (signUserInLoadingStatus.errorMessage !== null) {
+      enqueueSnackbar({
+        message: signUserInLoadingStatus.errorMessage,
+        variant: "error",
       });
-    } catch (error) {
-      console.error(error);
-      if (error instanceof AxiosError) {
-        if (error.response?.status === 401) {
-          enqueueSnackbar({
-            variant: "error",
-            message: "Wrong password or username",
-          });
-        }
-      }
     }
+  }, [enqueueSnackbar, signUserInLoadingStatus.errorMessage]);
+
+  const onSubmit = async (values: IFormValues) => {
+    const { username, password } = values;
+    dispatch(signUserIn({ username, password, signIn }));
   };
+
+  if (signUserInLoadingStatus.status === ELoadingStatus.PENDING) {
+    return (
+      <Center>
+        <Loading />
+      </Center>
+    );
+  }
 
   return (
     <React.Fragment>

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   RouterProvider,
   createBrowserRouter,
@@ -5,7 +6,6 @@ import {
 } from "react-router-dom";
 import { useAuthUser, useIsAuthenticated } from "react-auth-kit";
 import { SignIn } from "pages/SignIn";
-import { Dashboard } from "pages/Dashboard";
 import { clientRoutes } from "./clientRoutes";
 import { AppContainer } from "components/AppContainer";
 import { ShowUser } from "pages/ShowUser";
@@ -13,10 +13,22 @@ import { RootLayout } from "layouts/RootLayout";
 import { AllUsers } from "pages/AllUsers";
 import { AdminLayout } from "layouts/AdminLayout";
 import { NewUser } from "pages/NewUser";
+import { AuthLayout } from "layouts/AuthLayout";
+import { AdminDashboard } from "pages/AdminDashboard";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
   const auth = useAuthUser();
+
+  const isSignedIn = React.useMemo(() => isAuthenticated(), [isAuthenticated]);
+
+  const isAdmin = React.useMemo(() => {
+    const authUser = auth();
+    if (isAuthenticated() && authUser) {
+      return Boolean(authUser.is_staff);
+    }
+    return false;
+  }, [auth, isAuthenticated]);
 
   const router = createBrowserRouter([
     {
@@ -24,51 +36,60 @@ export const AppRoutes = () => {
       element: <RootLayout />,
       children: [
         {
+          path: clientRoutes.public.root,
+          element: <>root page</>,
+        },
+        {
           path: clientRoutes.public.signIn,
           element: <SignIn />,
           loader: () => {
-            if (isAuthenticated()) {
-              return redirect(clientRoutes.authShared.dashboard);
-            }
-            return null;
-          },
-        },
-        {
-          path: clientRoutes.authShared.dashboard,
-          element: <Dashboard />,
-          loader: () => {
-            if (!isAuthenticated()) {
-              return redirect(clientRoutes.public.signIn);
-            }
-            return null;
-          },
-        },
-        {
-          path: clientRoutes.admin.admin,
-          element: <AdminLayout />,
-          loader: () => {
-            if (!isAuthenticated()) {
-              return redirect(clientRoutes.public.signIn);
-            } else {
-              const authUser = auth();
-              if (authUser && !authUser.isStaff) {
-                return redirect(clientRoutes.authShared.dashboard);
+            if (isSignedIn) {
+              if (isAdmin) {
+                return redirect(clientRoutes.admin.dashboard);
+              } else {
+                return redirect(clientRoutes.nonAdmin.dashboard);
               }
+            }
+            return null;
+          },
+        },
+        {
+          path: "",
+          element: <AuthLayout />,
+          loader: () => {
+            if (!isSignedIn) {
+              return redirect(clientRoutes.public.signIn);
             }
             return null;
           },
           children: [
             {
-              path: "users/new/",
-              element: <NewUser />,
-            },
-            {
-              path: "users/all/",
-              element: <AllUsers />,
-            },
-            {
-              path: "users/:userId/",
-              element: <ShowUser />,
+              path: clientRoutes.admin.admin,
+              element: <AdminLayout />,
+              loader: () => {
+                if (!isAdmin) {
+                  return redirect(clientRoutes.nonAdmin.dashboard);
+                }
+                return null;
+              },
+              children: [
+                {
+                  path: "dashboard/",
+                  element: <AdminDashboard />,
+                },
+                {
+                  path: "users/new/",
+                  element: <NewUser />,
+                },
+                {
+                  path: "users/all/",
+                  element: <AllUsers />,
+                },
+                {
+                  path: "users/:userId/",
+                  element: <ShowUser />,
+                },
+              ],
             },
           ],
         },

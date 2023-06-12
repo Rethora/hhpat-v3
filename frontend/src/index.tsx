@@ -17,19 +17,19 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <AuthProvider
-        authType="cookie"
-        authName="_auth"
-        cookieDomain={window.location.hostname}
-        cookieSecure={window.location.protocol === "https:"}
-        refresh={refreshApi}
-      >
+    <AuthProvider
+      authType="cookie"
+      authName="_auth"
+      cookieDomain={window.location.hostname}
+      cookieSecure={window.location.protocol === "https:"}
+      refresh={refreshApi}
+    >
+      <Provider store={store}>
         <SnackbarProvider>
           <AppRoutes />
         </SnackbarProvider>
-      </AuthProvider>
-    </Provider>
+      </Provider>
+    </AuthProvider>
   </React.StrictMode>
 );
 

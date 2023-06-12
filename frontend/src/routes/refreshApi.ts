@@ -4,7 +4,10 @@ import { apiRoutes } from "./apiRoutes";
 import { BASE_API_URL, apiTokenInfo } from "utils/config";
 
 export const refreshApi = createRefresh({
-  interval: apiTokenInfo.access.expiresIn,
+  interval:
+    process.env.NODE_ENV === "development"
+      ? 1
+      : apiTokenInfo.access.expiresIn - 1,
   // @ts-ignore # tf?
   refreshApiCallback: async ({ authToken, refreshToken }) => {
     try {

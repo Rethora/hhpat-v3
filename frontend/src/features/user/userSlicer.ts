@@ -113,12 +113,12 @@ export const signUserIn = createAsyncThunk(
   }) => {
     const {
       data: { access, refresh },
-    } = await fetchNonAuthenticated.post<IToken>(
+    } = await fetchNonAuthenticated().post<IToken>(
       apiRoutes.authentication.signIn,
       { username, password }
     );
 
-    const { data: authState } = await fetchNonAuthenticated.get<IUser>(
+    const { data: authState } = await fetchNonAuthenticated().get<IUser>(
       apiRoutes.authentication.userSummary,
       { headers: { Authorization: `${TOKEN_TYPE} ${access}` } }
     );
@@ -132,7 +132,9 @@ export const signUserIn = createAsyncThunk(
 );
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const { data } = await fetchAuthenticated.get<IUser[]>(apiRoutes.admin.users);
+  const { data } = await fetchAuthenticated().get<IUser[]>(
+    apiRoutes.admin.users
+  );
   return data;
 });
 
@@ -146,7 +148,7 @@ export const createUser = createAsyncThunk(
     is_staff: boolean;
     is_superuser: boolean;
   }) => {
-    const { data } = await fetchAuthenticated.post<IUser>(
+    const { data } = await fetchAuthenticated().post<IUser>(
       apiRoutes.admin.users,
       {
         ...payload,

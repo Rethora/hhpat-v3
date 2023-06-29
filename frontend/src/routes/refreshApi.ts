@@ -10,7 +10,7 @@ export const refreshApi = createRefresh({
     try {
       const {
         data: { access, refresh },
-      } = await fetchNonAuthenticated.post<IToken>(
+      } = await fetchNonAuthenticated().post<IToken>(
         apiRoutes.authentication.tokenRefresh,
         {
           refresh: refreshToken,

@@ -6,11 +6,11 @@ const defaultAxiosConfig: CreateAxiosDefaults = {
   baseURL: BASE_API_URL,
 };
 
-export const fetchAuthenticated = axios.create({
+export const fetchAuthenticated = () => axios.create({
   ...defaultAxiosConfig,
   headers: {
     Authorization: `${getCookie("_auth_type")} ${getCookie("_auth")}`,
   },
 });
 
-export const fetchNonAuthenticated = axios.create({ ...defaultAxiosConfig });
+export const fetchNonAuthenticated = () => axios.create({ ...defaultAxiosConfig });

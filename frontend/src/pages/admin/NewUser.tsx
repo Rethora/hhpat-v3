@@ -101,6 +101,7 @@ export const NewUser = () => {
               <div className="input-with-error">
                 <Input
                   name="first_name"
+                  label="First Name"
                   placeholder="First Name"
                   type="text"
                   onChange={handleChange}
@@ -117,6 +118,7 @@ export const NewUser = () => {
               <div className="input-with-error">
                 <Input
                   name="last_name"
+                  label="Last Name"
                   placeholder="Last Name"
                   type="text"
                   onChange={handleChange}
@@ -132,6 +134,7 @@ export const NewUser = () => {
               <div className="input-with-error">
                 <Input
                   name="email"
+                  label="Email"
                   placeholder="Email"
                   type="email"
                   onChange={handleChange}

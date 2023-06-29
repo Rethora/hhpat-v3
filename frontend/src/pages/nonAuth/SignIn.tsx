@@ -97,6 +97,7 @@ export const SignIn = () => {
               <div className="input-with-error">
                 <Input
                   name="username"
+                  label="Email or Username"
                   placeholder="Email or Username"
                   aria-label="username"
                   type="text"
@@ -114,6 +115,7 @@ export const SignIn = () => {
               <div className="input-with-error">
                 <Input
                   name="password"
+                  label="Password"
                   placeholder="Password"
                   aria-label="password"
                   type={showPassword ? "text" : "password"}

@@ -5,17 +5,18 @@ import {
   redirect,
 } from "react-router-dom";
 import { useAuthUser, useIsAuthenticated } from "react-auth-kit";
-import { SignIn } from "pages/SignIn";
 import { clientRoutes } from "./clientRoutes";
 import { AppContainer } from "components/AppContainer";
-import { ShowUser } from "pages/ShowUser";
 import { RootLayout } from "layouts/RootLayout";
-import { AllUsers } from "pages/AllUsers";
 import { AdminLayout } from "layouts/AdminLayout";
-import { NewUser } from "pages/NewUser";
 import { AuthLayout } from "layouts/AuthLayout";
-import { AdminDashboard } from "pages/AdminDashboard";
 import { IUser } from "types";
+import { SignIn } from "pages/nonAuth/SignIn";
+import { AdminDashboard } from "pages/admin/AdminDashboard";
+import { AllUsers } from "pages/admin/AllUsers";
+import { NewUser } from "pages/admin/NewUser";
+import { ShowUser } from "pages/admin/ShowUser";
+import { useAppDispatch } from "hooks/useAppDispatch";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();

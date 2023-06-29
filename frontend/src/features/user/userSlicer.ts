@@ -22,11 +22,13 @@ type TLoadingStatus = {
 };
 
 export interface IUserState {
+  currentUser: IUser | null;
   users: IUser[];
   loadingStatus: TLoadingStatus;
 }
 
 const initialState: IUserState = {
+  currentUser: null,
   users: [],
   loadingStatus: {
     signUserIn: { status: ELoadingStatus.IDLE, errorMessage: null },
@@ -39,6 +41,9 @@ export const userSlicer = createSlice({
   name: "users",
   initialState,
   reducers: {
+    setCurrentUser: (state, action: PayloadAction<IUser | null>) => {
+      state.currentUser = action.payload;
+    },
     reset: state => {
       const { users, loadingStatus } = initialState;
       state.users = users;
@@ -82,7 +87,9 @@ export const userSlicer = createSlice({
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.loadingStatus.fetchUsers.status = ELoadingStatus.FULFILLED;
       state.loadingStatus.fetchUsers.errorMessage = null;
-      state.users = action.payload;
+      state.users =
+        action.payload.filter(u => u.id !== state.currentUser?.id) ||
+        action.payload;
     });
     builder.addCase(createUser.pending, state => {
       state.loadingStatus.createUser.status = ELoadingStatus.PENDING;
@@ -162,6 +169,6 @@ export const createUser = createAsyncThunk(
 export const selectUserById = (state: RootState, userId: number) =>
   state.users.users.find(user => user.id === userId);
 
-export const { reset, resetLoadingState } = userSlicer.actions;
+export const { setCurrentUser, reset, resetLoadingState } = userSlicer.actions;
 
 export default userSlicer.reducer;

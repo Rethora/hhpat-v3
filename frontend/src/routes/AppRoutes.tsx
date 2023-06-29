@@ -17,10 +17,12 @@ import { AllUsers } from "pages/admin/AllUsers";
 import { NewUser } from "pages/admin/NewUser";
 import { ShowUser } from "pages/admin/ShowUser";
 import { useAppDispatch } from "hooks/useAppDispatch";
+import { setCurrentUser } from "features/user/userSlicer";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
   const auth = useAuthUser();
+  const dispatch = useAppDispatch();
 
   const isSignedIn = React.useMemo(() => isAuthenticated(), [isAuthenticated]);
 
@@ -31,6 +33,10 @@ export const AppRoutes = () => {
     }
     return false;
   }, [auth, isAuthenticated]);
+
+  React.useEffect(() => {
+    dispatch(setCurrentUser(auth() ? (auth() as IUser) : null));
+  }, [auth, dispatch, isSignedIn]);
 
   const router = createBrowserRouter([
     {

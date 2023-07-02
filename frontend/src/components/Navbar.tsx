@@ -32,12 +32,15 @@ interface INavButtonProps {
 
 const NavItem = ({ navItem }: INavButtonProps) => {
   const { pathname } = useLocation();
-  const isActive = React.useRef(pathname === navItem.path);
+  const isActive = React.useMemo(
+    () => pathname === navItem.path,
+    [navItem.path, pathname]
+  );
 
   return (
     <div
       className={`${
-        isActive.current && pathname !== "/" ? "underline" : "no-underline"
+        isActive && pathname !== "/" ? "underline" : "no-underline"
       } px-4`}
     >
       <Link to={navItem.path}>{navItem.label}</Link>

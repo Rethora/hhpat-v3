@@ -5,21 +5,26 @@ import {
   redirect,
 } from "react-router-dom";
 import { useAuthUser, useIsAuthenticated } from "react-auth-kit";
-import { SignIn } from "pages/SignIn";
 import { clientRoutes } from "./clientRoutes";
-import { AppContainer } from "components/AppContainer";
-import { ShowUser } from "pages/ShowUser";
 import { RootLayout } from "layouts/RootLayout";
-import { AllUsers } from "pages/AllUsers";
 import { AdminLayout } from "layouts/AdminLayout";
-import { NewUser } from "pages/NewUser";
 import { AuthLayout } from "layouts/AuthLayout";
-import { AdminDashboard } from "pages/AdminDashboard";
 import { IUser } from "types";
+import { SignIn } from "pages/nonAuth/SignIn";
+import { AdminDashboard } from "pages/admin/AdminDashboard";
+import { AllUsers } from "pages/admin/AllUsers";
+import { NewUser } from "pages/admin/NewUser";
+import { ShowUser } from "pages/admin/ShowUser";
+import { useAppDispatch } from "hooks/useAppDispatch";
+import { setCurrentUser } from "features/user/userSlicer";
+import { NewUserEntry } from "pages/admin/NewUserEntry";
+import { AdminUserLayout } from "layouts/AdminUserLayout";
+import { ShowUserEntry } from "pages/admin/ShowUserEntry";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
   const auth = useAuthUser();
+  const dispatch = useAppDispatch();
 
   const isSignedIn = React.useMemo(() => isAuthenticated(), [isAuthenticated]);
 
@@ -30,6 +35,10 @@ export const AppRoutes = () => {
     }
     return false;
   }, [auth, isAuthenticated]);
+
+  React.useEffect(() => {
+    dispatch(setCurrentUser(auth() ? (auth() as IUser) : null));
+  }, [auth, dispatch, isSignedIn]);
 
   const router = createBrowserRouter([
     {
@@ -55,7 +64,6 @@ export const AppRoutes = () => {
           },
         },
         {
-          path: "",
           element: <AuthLayout />,
           loader: () => {
             if (!isSignedIn) {
@@ -87,8 +95,21 @@ export const AppRoutes = () => {
                   element: <AllUsers />,
                 },
                 {
-                  path: "users/:userId/",
-                  element: <ShowUser />,
+                  element: <AdminUserLayout />,
+                  children: [
+                    {
+                      path: "users/:userId/",
+                      element: <ShowUser />,
+                    },
+                    {
+                      path: "users/:userId/entries/new/",
+                      element: <NewUserEntry />,
+                    },
+                    {
+                      path: "users/:userId/entries/:entryId/",
+                      element: <ShowUserEntry />,
+                    },
+                  ],
                 },
               ],
             },
@@ -98,9 +119,5 @@ export const AppRoutes = () => {
     },
   ]);
 
-  return (
-    <AppContainer>
-      <RouterProvider router={router} />
-    </AppContainer>
-  );
+  return <RouterProvider router={router} />;
 };

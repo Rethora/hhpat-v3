@@ -1,21 +1,21 @@
+import React from "react";
 import { fetchUsers } from "features/user/userSlicer";
 import { useAppDispatch } from "hooks/useAppDispatch";
 import { useAppSelector } from "hooks/useAppSelector";
-import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { ELoadingStatus } from "types";
 
 export const AdminLayout = () => {
   const dispatch = useAppDispatch();
-  const userLoadingStatus = useAppSelector(
+  const fetchUsersLoadingStatus = useAppSelector(
     state => state.users.loadingStatus.fetchUsers.status
   );
 
-  useEffect(() => {
-    if (userLoadingStatus === ELoadingStatus.IDLE) {
+  React.useEffect(() => {
+    if (fetchUsersLoadingStatus === ELoadingStatus.IDLE) {
       dispatch(fetchUsers());
     }
-  }, [dispatch, userLoadingStatus]);
+  }, [dispatch, fetchUsersLoadingStatus]);
 
   return <Outlet />;
 };

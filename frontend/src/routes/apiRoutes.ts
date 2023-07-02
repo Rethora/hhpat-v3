@@ -4,10 +4,11 @@ export const apiRoutes = {
     userSummary: "/user-summary/",
     tokenRefresh: "/token/refresh/",
   },
-  admin: {
-    users: "/api/users/",
+  nonAdmin: {
+    entries: "/api/user/entries/",
   },
-  userEntries: {
-    all: "/api/user/entries/",
+  admin: {
+    users: "/api/admin/users/",
+    usersEntries: "/api/admin/entries/",
   },
 };

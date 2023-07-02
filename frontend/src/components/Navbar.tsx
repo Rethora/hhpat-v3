@@ -32,12 +32,15 @@ interface INavButtonProps {
 
 const NavItem = ({ navItem }: INavButtonProps) => {
   const { pathname } = useLocation();
-  const isActive = React.useRef(pathname === navItem.path);
+  const isActive = React.useMemo(
+    () => pathname === navItem.path,
+    [navItem.path, pathname]
+  );
 
   return (
     <div
       className={`${
-        isActive.current && pathname !== "/" ? "underline" : "no-underline"
+        isActive && pathname !== "/" ? "underline" : "no-underline"
       } px-4`}
     >
       <Link to={navItem.path}>{navItem.label}</Link>
@@ -78,7 +81,7 @@ export const Navbar = () => {
   }, [isSignedIn, isAdmin]);
 
   return (
-    <div className="navbar-shadow absolute left-0 top-0 h-14 w-screen bg-grey text-offWhite">
+    <div className="navbar-shadow h-14 bg-grey text-offWhite">
       <div className="flex h-full items-center justify-between">
         <div className="flex">
           {navItems.map(item => (

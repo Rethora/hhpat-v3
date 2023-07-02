@@ -23,9 +23,9 @@ schema_view = get_schema_view(
 )
 
 router = routers.DefaultRouter()
-router.register(r"users", user_views.UserView, "user")
-router.register(r"user/entries", entry_views.UserEntryView, "user_entry"),
-router.register(r"admin/entries", entry_views.AdminEntryView, "admin_entry"),
+router.register(r"admin/users", user_views.UserView, "admin_user")
+router.register(r"admin/entries", entry_views.AdminEntryView, "admin_entry")
+router.register(r"user/entries", entry_views.UserEntryView, "user_entry")
 
 urlpatterns = [
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),

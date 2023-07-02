@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { signInFunctionParams } from "react-auth-kit/dist/types";
 import { apiRoutes } from "routes/apiRoutes";
 import { fetchAuthenticated, fetchNonAuthenticated } from "routes/fetch";
-import { ELoadingStatus, IToken, IUser } from "types";
+import { ELoadingStatus, IEntry, IToken, IUser } from "types";
 import {
   ACCESS_TOKEN_EXPIRE_IN,
   REFRESH_TOKEN_EXPIRE_IN,
@@ -15,23 +15,32 @@ interface ILoadingStatus {
   errorMessage: string | null;
 }
 
-type TLoadingStatusKey = "signUserIn" | "fetchUsers" | "createUser";
+type TLoadingStatusKey =
+  | "signUserIn"
+  | "fetchUsers"
+  | "createUser"
+  | "fetchEntriesByUserId"
+  | "createEntryForUser";
 
 type TLoadingStatus = {
   [K in TLoadingStatusKey]: ILoadingStatus;
 };
 
 export interface IUserState {
+  currentUser: IUser | null;
   users: IUser[];
   loadingStatus: TLoadingStatus;
 }
 
 const initialState: IUserState = {
+  currentUser: null,
   users: [],
   loadingStatus: {
     signUserIn: { status: ELoadingStatus.IDLE, errorMessage: null },
     fetchUsers: { status: ELoadingStatus.IDLE, errorMessage: null },
     createUser: { status: ELoadingStatus.IDLE, errorMessage: null },
+    fetchEntriesByUserId: { status: ELoadingStatus.IDLE, errorMessage: null },
+    createEntryForUser: { status: ELoadingStatus.IDLE, errorMessage: null },
   },
 };
 
@@ -39,6 +48,9 @@ export const userSlicer = createSlice({
   name: "users",
   initialState,
   reducers: {
+    setCurrentUser: (state, action: PayloadAction<IUser | null>) => {
+      state.currentUser = action.payload;
+    },
     reset: state => {
       const { users, loadingStatus } = initialState;
       state.users = users;
@@ -82,7 +94,9 @@ export const userSlicer = createSlice({
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
       state.loadingStatus.fetchUsers.status = ELoadingStatus.FULFILLED;
       state.loadingStatus.fetchUsers.errorMessage = null;
-      state.users = action.payload;
+      state.users =
+        action.payload.filter(u => u.id !== state.currentUser?.id) ||
+        action.payload;
     });
     builder.addCase(createUser.pending, state => {
       state.loadingStatus.createUser.status = ELoadingStatus.PENDING;
@@ -96,6 +110,46 @@ export const userSlicer = createSlice({
       state.loadingStatus.createUser.status = ELoadingStatus.FULFILLED;
       state.loadingStatus.createUser.errorMessage = null;
       state.users.push(action.payload);
+    });
+    builder.addCase(fetchEntriesByUserId.pending, state => {
+      state.loadingStatus.fetchEntriesByUserId.status = ELoadingStatus.PENDING;
+      state.loadingStatus.fetchEntriesByUserId.errorMessage = null;
+    });
+    builder.addCase(fetchEntriesByUserId.rejected, state => {
+      state.loadingStatus.fetchEntriesByUserId.status = ELoadingStatus.REJECTED;
+      state.loadingStatus.fetchEntriesByUserId.errorMessage =
+        "Unable to retrieve entries";
+    });
+    builder.addCase(fetchEntriesByUserId.fulfilled, (state, action) => {
+      state.loadingStatus.fetchEntriesByUserId.status =
+        ELoadingStatus.FULFILLED;
+      state.loadingStatus.fetchEntriesByUserId.errorMessage = null;
+
+      const user = state.users.find(u => u.id === action.meta.arg.userId);
+      if (user) {
+        user.entries = action.payload;
+      }
+    });
+    builder.addCase(createEntryForUser.pending, state => {
+      state.loadingStatus.createEntryForUser.status = ELoadingStatus.PENDING;
+      state.loadingStatus.createEntryForUser.errorMessage = null;
+    });
+    builder.addCase(createEntryForUser.rejected, state => {
+      state.loadingStatus.createEntryForUser.status = ELoadingStatus.REJECTED;
+      state.loadingStatus.createEntryForUser.errorMessage =
+        "Unable to create entry";
+    });
+    builder.addCase(createEntryForUser.fulfilled, (state, action) => {
+      state.loadingStatus.createEntryForUser.status = ELoadingStatus.FULFILLED;
+      state.loadingStatus.createEntryForUser.errorMessage = null;
+
+      const user = state.users.find(u => u.id === action.payload.user);
+      if (user) {
+        if (!user.entries) {
+          user.entries = [];
+        }
+        user.entries.push(action.payload);
+      }
     });
   },
 });
@@ -113,12 +167,12 @@ export const signUserIn = createAsyncThunk(
   }) => {
     const {
       data: { access, refresh },
-    } = await fetchNonAuthenticated.post<IToken>(
+    } = await fetchNonAuthenticated().post<IToken>(
       apiRoutes.authentication.signIn,
       { username, password }
     );
 
-    const { data: authState } = await fetchNonAuthenticated.get<IUser>(
+    const { data: authState } = await fetchNonAuthenticated().get<IUser>(
       apiRoutes.authentication.userSummary,
       { headers: { Authorization: `${TOKEN_TYPE} ${access}` } }
     );
@@ -132,7 +186,9 @@ export const signUserIn = createAsyncThunk(
 );
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
-  const { data } = await fetchAuthenticated.get<IUser[]>(apiRoutes.admin.users);
+  const { data } = await fetchAuthenticated().get<IUser[]>(
+    apiRoutes.admin.users
+  );
   return data;
 });
 
@@ -146,7 +202,7 @@ export const createUser = createAsyncThunk(
     is_staff: boolean;
     is_superuser: boolean;
   }) => {
-    const { data } = await fetchAuthenticated.post<IUser>(
+    const { data } = await fetchAuthenticated().post<IUser>(
       apiRoutes.admin.users,
       {
         ...payload,
@@ -157,9 +213,38 @@ export const createUser = createAsyncThunk(
   }
 );
 
-export const selectUserById = (state: RootState, userId: number) =>
-  state.users.users.find(user => user.id === userId);
+export const fetchEntriesByUserId = createAsyncThunk(
+  "users/fetchEntriesByUserId",
+  async ({ userId }: { userId: number }) => {
+    const { data } = await fetchAuthenticated().get<IEntry[]>(
+      apiRoutes.admin.usersEntries,
+      {
+        params: {
+          user: userId,
+        },
+      }
+    );
+    return data;
+  }
+);
 
-export const { reset, resetLoadingState } = userSlicer.actions;
+export const createEntryForUser = createAsyncThunk(
+  "users/createEntryForUser",
+  async ({ entry }: { entry: Partial<IEntry> }) => {
+    const { data } = await fetchAuthenticated().post<IEntry>(
+      apiRoutes.admin.usersEntries,
+      entry
+    );
+    return data;
+  }
+);
+
+export const selectUserById = (state: RootState, userId: number) =>
+  state.users.users.find(user => user.id === userId) || null;
+
+export const selectLastUserEntry = (state: RootState, userId: number) =>
+  state.users.users.find(u => u.id === userId)?.entries?.slice(-1)[0] || null;
+
+export const { setCurrentUser, reset, resetLoadingState } = userSlicer.actions;
 
 export default userSlicer.reducer;

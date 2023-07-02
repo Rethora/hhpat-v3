@@ -7,9 +7,9 @@ import { AppRoutes } from "routes/AppRoutes";
 import { refreshApi } from "routes/refreshApi";
 import { SnackbarProvider } from "notistack";
 import { Provider } from "react-redux";
+import { store } from "utils/store";
 
 import "./index.css";
-import { store } from "utils/store";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

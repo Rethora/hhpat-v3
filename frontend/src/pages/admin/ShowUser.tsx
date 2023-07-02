@@ -1,5 +1,4 @@
 import React from "react";
-import { Center } from "components/Center";
 import { Loading } from "components/Loading";
 import { NeutralButton } from "components/NeutralButton";
 import { selectUserById } from "features/user/userSlicer";

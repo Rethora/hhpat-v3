@@ -142,7 +142,7 @@ export const SignIn = () => {
                   {errors.password && touched.password && errors.password}
                 </span>
               </div>
-              <div className="flex justify-end">
+              <div className="mt-8 flex justify-end">
                 <PositiveButton type="submit">Sign In</PositiveButton>
               </div>
             </form>

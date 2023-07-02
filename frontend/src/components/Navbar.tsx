@@ -81,7 +81,7 @@ export const Navbar = () => {
   }, [isSignedIn, isAdmin]);
 
   return (
-    <div className="navbar-shadow absolute left-0 top-0 h-14 w-screen bg-grey text-offWhite">
+    <div className="navbar-shadow h-14 bg-grey text-offWhite">
       <div className="flex h-full items-center justify-between">
         <div className="flex">
           {navItems.map(item => (

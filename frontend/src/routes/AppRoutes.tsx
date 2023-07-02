@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import { useAuthUser, useIsAuthenticated } from "react-auth-kit";
 import { clientRoutes } from "./clientRoutes";
-import { AppContainer } from "components/AppContainer";
 import { RootLayout } from "layouts/RootLayout";
 import { AdminLayout } from "layouts/AdminLayout";
 import { AuthLayout } from "layouts/AuthLayout";
@@ -120,9 +119,5 @@ export const AppRoutes = () => {
     },
   ]);
 
-  return (
-    <AppContainer>
-      <RouterProvider router={router} />
-    </AppContainer>
-  );
+  return <RouterProvider router={router} />;
 };

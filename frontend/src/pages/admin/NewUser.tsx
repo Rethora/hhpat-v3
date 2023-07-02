@@ -1,7 +1,7 @@
 import { Input } from "components/Input";
 import { PositiveButton } from "components/PositiveButton";
 import { createUser, resetLoadingState } from "features/user/userSlicer";
-import { Formik } from "formik";
+import { Formik, FormikErrors } from "formik";
 import { useAppDispatch } from "hooks/useAppDispatch";
 import { useAppSelector } from "hooks/useAppSelector";
 import { isEmpty } from "lodash";
@@ -28,7 +28,7 @@ const initialValues: IFormValues = {
 };
 
 const validate = (values: IFormValues) => {
-  const errors: IFormValues = {} as IFormValues;
+  const errors: FormikErrors<IFormValues> = {};
 
   if (isEmpty(values.first_name)) {
     errors.first_name = "Required";
@@ -101,7 +101,7 @@ export const NewUser = () => {
               <div className="input-with-error">
                 <Input
                   name="first_name"
-                  label="First Name"
+                  labelprops={{ title: "First Name" }}
                   placeholder="First Name"
                   type="text"
                   onChange={handleChange}
@@ -118,7 +118,9 @@ export const NewUser = () => {
               <div className="input-with-error">
                 <Input
                   name="last_name"
-                  label="Last Name"
+                  labelprops={{
+                    title: "Last Name",
+                  }}
                   placeholder="Last Name"
                   type="text"
                   onChange={handleChange}
@@ -134,7 +136,9 @@ export const NewUser = () => {
               <div className="input-with-error">
                 <Input
                   name="email"
-                  label="Email"
+                  labelprops={{
+                    title: "Email",
+                  }}
                   placeholder="Email"
                   type="email"
                   onChange={handleChange}
@@ -148,7 +152,7 @@ export const NewUser = () => {
                 </span>
               </div>
               <div className="flex justify-end">
-                <PositiveButton type="submit">Create</PositiveButton>
+                <PositiveButton type="submit">Submit</PositiveButton>
               </div>
             </form>
           )}

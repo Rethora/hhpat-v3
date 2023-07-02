@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { signInFunctionParams } from "react-auth-kit/dist/types";
 import { apiRoutes } from "routes/apiRoutes";
 import { fetchAuthenticated, fetchNonAuthenticated } from "routes/fetch";
-import { ELoadingStatus, IToken, IUser } from "types";
+import { ELoadingStatus, IEntry, IToken, IUser } from "types";
 import {
   ACCESS_TOKEN_EXPIRE_IN,
   REFRESH_TOKEN_EXPIRE_IN,
@@ -15,7 +15,12 @@ interface ILoadingStatus {
   errorMessage: string | null;
 }
 
-type TLoadingStatusKey = "signUserIn" | "fetchUsers" | "createUser";
+type TLoadingStatusKey =
+  | "signUserIn"
+  | "fetchUsers"
+  | "createUser"
+  | "fetchEntriesByUserId"
+  | "createEntryForUser";
 
 type TLoadingStatus = {
   [K in TLoadingStatusKey]: ILoadingStatus;
@@ -34,6 +39,8 @@ const initialState: IUserState = {
     signUserIn: { status: ELoadingStatus.IDLE, errorMessage: null },
     fetchUsers: { status: ELoadingStatus.IDLE, errorMessage: null },
     createUser: { status: ELoadingStatus.IDLE, errorMessage: null },
+    fetchEntriesByUserId: { status: ELoadingStatus.IDLE, errorMessage: null },
+    createEntryForUser: { status: ELoadingStatus.IDLE, errorMessage: null },
   },
 };
 
@@ -104,6 +111,46 @@ export const userSlicer = createSlice({
       state.loadingStatus.createUser.errorMessage = null;
       state.users.push(action.payload);
     });
+    builder.addCase(fetchEntriesByUserId.pending, state => {
+      state.loadingStatus.fetchEntriesByUserId.status = ELoadingStatus.PENDING;
+      state.loadingStatus.fetchEntriesByUserId.errorMessage = null;
+    });
+    builder.addCase(fetchEntriesByUserId.rejected, state => {
+      state.loadingStatus.fetchEntriesByUserId.status = ELoadingStatus.REJECTED;
+      state.loadingStatus.fetchEntriesByUserId.errorMessage =
+        "Unable to retrieve entries";
+    });
+    builder.addCase(fetchEntriesByUserId.fulfilled, (state, action) => {
+      state.loadingStatus.fetchEntriesByUserId.status =
+        ELoadingStatus.FULFILLED;
+      state.loadingStatus.fetchEntriesByUserId.errorMessage = null;
+
+      const user = state.users.find(u => u.id === action.meta.arg.userId);
+      if (user) {
+        user.entries = action.payload;
+      }
+    });
+    builder.addCase(createEntryForUser.pending, state => {
+      state.loadingStatus.createEntryForUser.status = ELoadingStatus.PENDING;
+      state.loadingStatus.createEntryForUser.errorMessage = null;
+    });
+    builder.addCase(createEntryForUser.rejected, state => {
+      state.loadingStatus.createEntryForUser.status = ELoadingStatus.REJECTED;
+      state.loadingStatus.createEntryForUser.errorMessage =
+        "Unable to create entry";
+    });
+    builder.addCase(createEntryForUser.fulfilled, (state, action) => {
+      state.loadingStatus.createEntryForUser.status = ELoadingStatus.FULFILLED;
+      state.loadingStatus.createEntryForUser.errorMessage = null;
+
+      const user = state.users.find(u => u.id === action.payload.user);
+      if (user) {
+        if (!user.entries) {
+          user.entries = [];
+        }
+        user.entries.push(action.payload);
+      }
+    });
   },
 });
 
@@ -166,8 +213,37 @@ export const createUser = createAsyncThunk(
   }
 );
 
+export const fetchEntriesByUserId = createAsyncThunk(
+  "users/fetchEntriesByUserId",
+  async ({ userId }: { userId: number }) => {
+    const { data } = await fetchAuthenticated().get<IEntry[]>(
+      apiRoutes.admin.usersEntries,
+      {
+        params: {
+          user: userId,
+        },
+      }
+    );
+    return data;
+  }
+);
+
+export const createEntryForUser = createAsyncThunk(
+  "users/createEntryForUser",
+  async ({ entry }: { entry: Partial<IEntry> }) => {
+    const { data } = await fetchAuthenticated().post<IEntry>(
+      apiRoutes.admin.usersEntries,
+      entry
+    );
+    return data;
+  }
+);
+
 export const selectUserById = (state: RootState, userId: number) =>
-  state.users.users.find(user => user.id === userId);
+  state.users.users.find(user => user.id === userId) || null;
+
+export const selectLastUserEntry = (state: RootState, userId: number) =>
+  state.users.users.find(u => u.id === userId)?.entries?.slice(-1)[0] || null;
 
 export const { setCurrentUser, reset, resetLoadingState } = userSlicer.actions;
 

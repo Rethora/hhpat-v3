@@ -2,7 +2,7 @@ import React from "react";
 import { useSignIn } from "react-auth-kit";
 import { useSnackbar } from "notistack";
 import { isEmpty } from "lodash";
-import { Formik } from "formik";
+import { Formik, FormikErrors } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Input } from "components/Input";
@@ -27,7 +27,7 @@ const initialValues: IFormValues = {
 };
 
 const validate = (values: IFormValues) => {
-  const errors: IFormValues = {} as IFormValues;
+  const errors: FormikErrors<IFormValues> = {};
 
   if (isEmpty(values.username)) {
     errors.username = "Required";
@@ -97,7 +97,7 @@ export const SignIn = () => {
               <div className="input-with-error">
                 <Input
                   name="username"
-                  label="Email or Username"
+                  labelprops={{ title: "Email or Username" }}
                   placeholder="Email or Username"
                   aria-label="username"
                   type="text"
@@ -115,7 +115,7 @@ export const SignIn = () => {
               <div className="input-with-error">
                 <Input
                   name="password"
-                  label="Password"
+                  labelprops={{ title: "Password" }}
                   placeholder="Password"
                   aria-label="password"
                   type={showPassword ? "text" : "password"}

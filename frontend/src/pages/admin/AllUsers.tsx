@@ -1,3 +1,5 @@
+import React from "react";
+import { Center } from "components/Center";
 import { Loading } from "components/Loading";
 import { useAppSelector } from "hooks/useAppSelector";
 import { Link } from "react-router-dom";
@@ -10,17 +12,36 @@ export const AllUsers = () => {
     state => state.users.loadingStatus.fetchUsers.status
   );
 
-  return fetchUsersLoadingStatus === ELoadingStatus.PENDING ? (
-    <Loading />
-  ) : (
-    <>
+  if (fetchUsersLoadingStatus === ELoadingStatus.PENDING) {
+    return (
+      <Center>
+        <Loading />
+      </Center>
+    );
+  }
+
+  if (fetchUsersLoadingStatus > ELoadingStatus.PENDING && users.length === 0) {
+    return (
+      <Center>
+        <React.Fragment>No Users Found</React.Fragment>
+      </Center>
+    );
+  }
+
+  return (
+    <React.Fragment>
       {users.map(user => (
         <div key={user.id}>
-          <Link to={`${clientRoutes.admin.users}${user.id}/`}>
+          <Link
+            to={clientRoutes.admin.singleUser.replace(
+              ":userId",
+              user.id.toString()
+            )}
+          >
             {user.email}
           </Link>
         </div>
       ))}
-    </>
+    </React.Fragment>
   );
 };

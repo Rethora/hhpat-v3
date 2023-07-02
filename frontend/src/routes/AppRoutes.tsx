@@ -18,6 +18,9 @@ import { NewUser } from "pages/admin/NewUser";
 import { ShowUser } from "pages/admin/ShowUser";
 import { useAppDispatch } from "hooks/useAppDispatch";
 import { setCurrentUser } from "features/user/userSlicer";
+import { NewUserEntry } from "pages/admin/NewUserEntry";
+import { AdminUserLayout } from "layouts/AdminUserLayout";
+import { ShowUserEntry } from "pages/admin/ShowUserEntry";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
@@ -62,7 +65,6 @@ export const AppRoutes = () => {
           },
         },
         {
-          path: "",
           element: <AuthLayout />,
           loader: () => {
             if (!isSignedIn) {
@@ -94,8 +96,21 @@ export const AppRoutes = () => {
                   element: <AllUsers />,
                 },
                 {
-                  path: "users/:userId/",
-                  element: <ShowUser />,
+                  element: <AdminUserLayout />,
+                  children: [
+                    {
+                      path: "users/:userId/",
+                      element: <ShowUser />,
+                    },
+                    {
+                      path: "users/:userId/entries/new/",
+                      element: <NewUserEntry />,
+                    },
+                    {
+                      path: "users/:userId/entries/:entryId/",
+                      element: <ShowUserEntry />,
+                    },
+                  ],
                 },
               ],
             },

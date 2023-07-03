@@ -19,6 +19,7 @@ type TLoadingStatusKey =
   | "signUserIn"
   | "fetchUsers"
   | "createUser"
+  | "fetchOwnEntries"
   | "fetchEntriesByUserId"
   | "createEntryForUser";
 
@@ -39,6 +40,7 @@ const initialState: IUserState = {
     signUserIn: { status: ELoadingStatus.IDLE, errorMessage: null },
     fetchUsers: { status: ELoadingStatus.IDLE, errorMessage: null },
     createUser: { status: ELoadingStatus.IDLE, errorMessage: null },
+    fetchOwnEntries: { status: ELoadingStatus.IDLE, errorMessage: null },
     fetchEntriesByUserId: { status: ELoadingStatus.IDLE, errorMessage: null },
     createEntryForUser: { status: ELoadingStatus.IDLE, errorMessage: null },
   },
@@ -52,7 +54,8 @@ export const userSlicer = createSlice({
       state.currentUser = action.payload;
     },
     reset: state => {
-      const { users, loadingStatus } = initialState;
+      const { currentUser, users, loadingStatus } = initialState;
+      state.currentUser = currentUser;
       state.users = users;
       state.loadingStatus = loadingStatus;
     },
@@ -110,6 +113,22 @@ export const userSlicer = createSlice({
       state.loadingStatus.createUser.status = ELoadingStatus.FULFILLED;
       state.loadingStatus.createUser.errorMessage = null;
       state.users.push(action.payload);
+    });
+    builder.addCase(fetchOwnEntries.pending, state => {
+      state.loadingStatus.fetchOwnEntries.status = ELoadingStatus.PENDING;
+      state.loadingStatus.fetchOwnEntries.errorMessage = null;
+    });
+    builder.addCase(fetchOwnEntries.rejected, state => {
+      state.loadingStatus.fetchOwnEntries.status = ELoadingStatus.REJECTED;
+      state.loadingStatus.fetchOwnEntries.errorMessage =
+        "Unable to retrieve entries";
+    });
+    builder.addCase(fetchOwnEntries.fulfilled, (state, action) => {
+      state.loadingStatus.fetchOwnEntries.status = ELoadingStatus.FULFILLED;
+      state.loadingStatus.fetchOwnEntries.errorMessage = null;
+      if (state.currentUser) {
+        state.currentUser.entries = action.payload;
+      }
     });
     builder.addCase(fetchEntriesByUserId.pending, state => {
       state.loadingStatus.fetchEntriesByUserId.status = ELoadingStatus.PENDING;
@@ -213,6 +232,16 @@ export const createUser = createAsyncThunk(
   }
 );
 
+export const fetchOwnEntries = createAsyncThunk(
+  "users/fetchOwnEntries",
+  async () => {
+    const { data } = await fetchAuthenticated().get<IEntry[]>(
+      apiRoutes.nonAdmin.entries
+    );
+    return data;
+  }
+);
+
 export const fetchEntriesByUserId = createAsyncThunk(
   "users/fetchEntriesByUserId",
   async ({ userId }: { userId: number }) => {
@@ -244,6 +273,9 @@ export const selectUserById = (state: RootState, userId: number) =>
 
 export const selectLastUserEntry = (state: RootState, userId: number) =>
   state.users.users.find(u => u.id === userId)?.entries?.slice(-1)[0] || null;
+
+export const selectOwnEntryById = (state: RootState, entryId: number) =>
+  state.users.currentUser?.entries?.find(entry => entry.id === entryId) || null;
 
 export const { setCurrentUser, reset, resetLoadingState } = userSlicer.actions;
 

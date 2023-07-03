@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { clientRoutes } from "routes/clientRoutes";
 import { ELoadingStatus } from "types";
 
-export const AllUsers = () => {
+export const ListUsers = () => {
   const users = useAppSelector(state => state.users.users);
   const fetchUsersLoadingStatus = useAppSelector(
     state => state.users.loadingStatus.fetchUsers.status

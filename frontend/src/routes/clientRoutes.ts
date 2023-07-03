@@ -4,7 +4,10 @@ export const clientRoutes = {
     signIn: "/sign-in/",
   },
   nonAdmin: {
+    nonAdmin: "/user/",
     dashboard: "/user/dashboard/",
+    listEntries: "/user/entries/all/",
+    showEntry: "/user/entries/:entryId/",
   },
   admin: {
     admin: "/admin/",

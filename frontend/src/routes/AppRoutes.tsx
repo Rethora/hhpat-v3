@@ -12,7 +12,7 @@ import { AuthLayout } from "layouts/AuthLayout";
 import { IUser } from "types";
 import { SignIn } from "pages/nonAuth/SignIn";
 import { AdminDashboard } from "pages/admin/AdminDashboard";
-import { AllUsers } from "pages/admin/AllUsers";
+import { ListUsers } from "pages/admin/ListUsers";
 import { NewUser } from "pages/admin/NewUser";
 import { ShowUser } from "pages/admin/ShowUser";
 import { useAppDispatch } from "hooks/useAppDispatch";
@@ -20,6 +20,10 @@ import { setCurrentUser } from "features/user/userSlicer";
 import { NewUserEntry } from "pages/admin/NewUserEntry";
 import { AdminUserLayout } from "layouts/AdminUserLayout";
 import { ShowUserEntry } from "pages/admin/ShowUserEntry";
+import { NonAdminLayout } from "layouts/NonAdminLayout";
+import { NonAdminDashboard } from "pages/nonAdmin/NonAdminDashboard";
+import { ListEntries } from "pages/nonAdmin/ListEntries";
+import { ShowEntry } from "pages/nonAdmin/ShowEntry";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
@@ -37,7 +41,8 @@ export const AppRoutes = () => {
   }, [auth, isAuthenticated]);
 
   React.useEffect(() => {
-    dispatch(setCurrentUser(auth() ? (auth() as IUser) : null));
+    const currentUser = auth();
+    dispatch(setCurrentUser(currentUser ? (currentUser as IUser) : null));
   }, [auth, dispatch, isSignedIn]);
 
   const router = createBrowserRouter([
@@ -73,6 +78,30 @@ export const AppRoutes = () => {
           },
           children: [
             {
+              path: clientRoutes.nonAdmin.nonAdmin,
+              element: <NonAdminLayout />,
+              loader: () => {
+                if (isAdmin) {
+                  return redirect(clientRoutes.admin.dashboard);
+                }
+                return null;
+              },
+              children: [
+                {
+                  path: "dashboard/",
+                  element: <NonAdminDashboard />,
+                },
+                {
+                  path: "entries/all/",
+                  element: <ListEntries />,
+                },
+                {
+                  path: "entries/:entryId",
+                  element: <ShowEntry />,
+                },
+              ],
+            },
+            {
               path: clientRoutes.admin.admin,
               element: <AdminLayout />,
               loader: () => {
@@ -92,7 +121,7 @@ export const AppRoutes = () => {
                 },
                 {
                   path: "users/all/",
-                  element: <AllUsers />,
+                  element: <ListUsers />,
                 },
                 {
                   element: <AdminUserLayout />,

@@ -1,8 +1,8 @@
+import React from "react";
 import { Center } from "components/Center";
 import { Loading } from "components/Loading";
 import { selectUserById } from "features/user/userSlicer";
 import { useAppSelector } from "hooks/useAppSelector";
-import React from "react";
 import { useParams } from "react-router-dom";
 import { ELoadingStatus } from "types";
 

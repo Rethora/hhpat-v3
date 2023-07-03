@@ -15,9 +15,7 @@ export const RootLayout = () => {
       <div
         className={`p-2 sm:px-16 md:px-24 lg:px-32 xl:px-40 ${
           height
-            ? "h-[" +
-              (height - navbarRef.current.clientHeight).toString() +
-              "px]"
+            ? "h-[" + (height - navbarRef.current.clientHeight) + "px]"
             : "h-screen"
         }`}
       >

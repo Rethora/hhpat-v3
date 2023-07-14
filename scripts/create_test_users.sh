@@ -3,6 +3,7 @@
 APP_ROOT="$(dirname "$(dirname "$(readlink -fm "$0")")")"
 
 cd $APP_ROOT/backend
+source .venv/bin/activate
 
 # * super admin
 echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('superadmin@email.com', 'superadmin@email.com', 'password')" | ./manage.py shell

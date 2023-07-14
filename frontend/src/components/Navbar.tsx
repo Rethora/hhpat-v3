@@ -1,4 +1,4 @@
-import { reset } from "features/user/userSlicer";
+import { reset, signUserOut } from "features/user/userSlicer";
 import { useAppDispatch } from "hooks/useAppDispatch";
 import React from "react";
 import { ReactElement } from "react";
@@ -93,6 +93,7 @@ export const Navbar = () => {
             <div
               className="cursor-pointer px-4"
               onClick={() => {
+                dispatch(signUserOut());
                 signOut();
                 dispatch(reset());
               }}

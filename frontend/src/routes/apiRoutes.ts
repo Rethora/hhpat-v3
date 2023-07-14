@@ -3,6 +3,7 @@ export const apiRoutes = {
     signIn: "/token/",
     userSummary: "/user-summary/",
     tokenRefresh: "/token/refresh/",
+    tokenBlacklist: "/token/blacklist/",
   },
   nonAdmin: {
     entries: "/api/user/entries/",

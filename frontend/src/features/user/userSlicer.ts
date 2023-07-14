@@ -3,6 +3,7 @@ import { signInFunctionParams } from "react-auth-kit/dist/types";
 import { apiRoutes } from "routes/apiRoutes";
 import { fetchAuthenticated, fetchNonAuthenticated } from "routes/fetch";
 import { ELoadingStatus, IEntry, IToken, IUser } from "types";
+import { getCookie } from "typescript-cookie";
 import {
   ACCESS_TOKEN_EXPIRE_IN,
   REFRESH_TOKEN_EXPIRE_IN,
@@ -105,9 +106,14 @@ export const userSlicer = createSlice({
       state.loadingStatus.createUser.status = ELoadingStatus.PENDING;
       state.loadingStatus.createUser.errorMessage = null;
     });
-    builder.addCase(createUser.rejected, state => {
+    builder.addCase(createUser.rejected, (state, action) => {
       state.loadingStatus.createUser.status = ELoadingStatus.REJECTED;
-      state.loadingStatus.createUser.errorMessage = "Unable to create user";
+      const { error } = action;
+      let errorMessage = "Couldn't create user";
+      if (error.code === "ERR_BAD_REQUEST") {
+        errorMessage = "User with this email already exists";
+      }
+      state.loadingStatus.createUser.errorMessage = errorMessage;
     });
     builder.addCase(createUser.fulfilled, (state, action) => {
       state.loadingStatus.createUser.status = ELoadingStatus.FULFILLED;
@@ -203,6 +209,16 @@ export const signUserIn = createAsyncThunk(
     };
   }
 );
+
+export const signUserOut = createAsyncThunk("users/signUserOut", async () => {
+  const { data } = await fetchNonAuthenticated().post(
+    apiRoutes.authentication.tokenBlacklist,
+    {
+      refresh: getCookie("_auth_refresh"),
+    }
+  );
+  return data;
+});
 
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   const { data } = await fetchAuthenticated().get<IUser[]>(

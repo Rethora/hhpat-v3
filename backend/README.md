@@ -23,5 +23,5 @@
 ### Universal
 
 - $ python3 manage.py makemigrations & python3 manage.py migrate
-- $ bash ../scripts/create_test_users.sh
+- $ python3 loaddata test_data.json
 - $ python3 runserver 0.0.0.0:8000 *or* use debug launch task

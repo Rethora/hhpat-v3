@@ -1,0 +1,594 @@
+[
+    {
+        "model": "admin.logentry",
+        "pk": 1,
+        "fields": {
+            "action_time": "2023-07-14T17:38:45.832Z",
+            "user": 1,
+            "content_type": 4,
+            "object_id": "3",
+            "object_repr": "user@email.com",
+            "action_flag": 2,
+            "change_message": "[{\"changed\": {\"fields\": [\"First name\", \"Last name\"]}}]"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 1,
+        "fields": {
+            "name": "Can add log entry",
+            "content_type": 1,
+            "codename": "add_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 2,
+        "fields": {
+            "name": "Can change log entry",
+            "content_type": 1,
+            "codename": "change_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 3,
+        "fields": {
+            "name": "Can delete log entry",
+            "content_type": 1,
+            "codename": "delete_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 4,
+        "fields": {
+            "name": "Can view log entry",
+            "content_type": 1,
+            "codename": "view_logentry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 5,
+        "fields": {
+            "name": "Can add permission",
+            "content_type": 2,
+            "codename": "add_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 6,
+        "fields": {
+            "name": "Can change permission",
+            "content_type": 2,
+            "codename": "change_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 7,
+        "fields": {
+            "name": "Can delete permission",
+            "content_type": 2,
+            "codename": "delete_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 8,
+        "fields": {
+            "name": "Can view permission",
+            "content_type": 2,
+            "codename": "view_permission"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 9,
+        "fields": {
+            "name": "Can add group",
+            "content_type": 3,
+            "codename": "add_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 10,
+        "fields": {
+            "name": "Can change group",
+            "content_type": 3,
+            "codename": "change_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 11,
+        "fields": {
+            "name": "Can delete group",
+            "content_type": 3,
+            "codename": "delete_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 12,
+        "fields": {
+            "name": "Can view group",
+            "content_type": 3,
+            "codename": "view_group"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 13,
+        "fields": {
+            "name": "Can add user",
+            "content_type": 4,
+            "codename": "add_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 14,
+        "fields": {
+            "name": "Can change user",
+            "content_type": 4,
+            "codename": "change_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 15,
+        "fields": {
+            "name": "Can delete user",
+            "content_type": 4,
+            "codename": "delete_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 16,
+        "fields": {
+            "name": "Can view user",
+            "content_type": 4,
+            "codename": "view_user"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 17,
+        "fields": {
+            "name": "Can add content type",
+            "content_type": 5,
+            "codename": "add_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 18,
+        "fields": {
+            "name": "Can change content type",
+            "content_type": 5,
+            "codename": "change_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 19,
+        "fields": {
+            "name": "Can delete content type",
+            "content_type": 5,
+            "codename": "delete_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 20,
+        "fields": {
+            "name": "Can view content type",
+            "content_type": 5,
+            "codename": "view_contenttype"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 21,
+        "fields": {
+            "name": "Can add session",
+            "content_type": 6,
+            "codename": "add_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 22,
+        "fields": {
+            "name": "Can change session",
+            "content_type": 6,
+            "codename": "change_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 23,
+        "fields": {
+            "name": "Can delete session",
+            "content_type": 6,
+            "codename": "delete_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 24,
+        "fields": {
+            "name": "Can view session",
+            "content_type": 6,
+            "codename": "view_session"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 25,
+        "fields": {
+            "name": "Can add outstanding token",
+            "content_type": 7,
+            "codename": "add_outstandingtoken"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 26,
+        "fields": {
+            "name": "Can change outstanding token",
+            "content_type": 7,
+            "codename": "change_outstandingtoken"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 27,
+        "fields": {
+            "name": "Can delete outstanding token",
+            "content_type": 7,
+            "codename": "delete_outstandingtoken"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 28,
+        "fields": {
+            "name": "Can view outstanding token",
+            "content_type": 7,
+            "codename": "view_outstandingtoken"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 29,
+        "fields": {
+            "name": "Can add blacklisted token",
+            "content_type": 8,
+            "codename": "add_blacklistedtoken"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 30,
+        "fields": {
+            "name": "Can change blacklisted token",
+            "content_type": 8,
+            "codename": "change_blacklistedtoken"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 31,
+        "fields": {
+            "name": "Can delete blacklisted token",
+            "content_type": 8,
+            "codename": "delete_blacklistedtoken"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 32,
+        "fields": {
+            "name": "Can view blacklisted token",
+            "content_type": 8,
+            "codename": "view_blacklistedtoken"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 33,
+        "fields": {
+            "name": "Can add entry",
+            "content_type": 9,
+            "codename": "add_entry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 34,
+        "fields": {
+            "name": "Can change entry",
+            "content_type": 9,
+            "codename": "change_entry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 35,
+        "fields": {
+            "name": "Can delete entry",
+            "content_type": 9,
+            "codename": "delete_entry"
+        }
+    },
+    {
+        "model": "auth.permission",
+        "pk": 36,
+        "fields": {
+            "name": "Can view entry",
+            "content_type": 9,
+            "codename": "view_entry"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$oSaw7pm2I70eOZpf5YfJK2$RTfgfTdI+2PmsWbapjxCc4AEYyaLseHVqp2/GUaglZM=",
+            "last_login": "2023-07-14T17:38:34.828Z",
+            "is_superuser": true,
+            "username": "superadmin@email.com",
+            "first_name": "",
+            "last_name": "",
+            "email": "superadmin@email.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2023-07-14T17:30:42.689Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$qGUkg1ebk1okhEgDuYtsiv$2kJtCr7DmJBWKOuu2sYmSFK2sGc6nobB0UEmcd+Z1C0=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "admin@email.com",
+            "first_name": "",
+            "last_name": "",
+            "email": "admin@email.com",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2023-07-14T17:30:43.132Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$eamsLEJzDGFECRI0cD7guz$das0I4nBU4sCF+hPF+Frl3f+0YyibFh5NiIxfH4P6tU=",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "user@email.com",
+            "first_name": "Rick",
+            "last_name": "Sanchez",
+            "email": "user@email.com",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2023-07-14T17:30:43Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 1,
+        "fields": { "app_label": "admin", "model": "logentry" }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 2,
+        "fields": { "app_label": "auth", "model": "permission" }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 3,
+        "fields": { "app_label": "auth", "model": "group" }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 4,
+        "fields": { "app_label": "auth", "model": "user" }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 5,
+        "fields": { "app_label": "contenttypes", "model": "contenttype" }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 6,
+        "fields": { "app_label": "sessions", "model": "session" }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 7,
+        "fields": {
+            "app_label": "token_blacklist",
+            "model": "outstandingtoken"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 8,
+        "fields": {
+            "app_label": "token_blacklist",
+            "model": "blacklistedtoken"
+        }
+    },
+    {
+        "model": "contenttypes.contenttype",
+        "pk": 9,
+        "fields": { "app_label": "entry", "model": "entry" }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "jmzafjqb0mjjg44907fr8khxtcunqhvj",
+        "fields": {
+            "session_data": ".eJxVjEEOwiAQRe_C2pChQyF16d4zkJkBpGogKe3KeHdt0oVu_3vvv1SgbS1h62kJc1RnZdTpd2OSR6o7iHeqt6al1XWZWe-KPmjX1xbT83K4fweFevnWNiFMItkmNgQ5GyNMDmhwDs0wRTIwZsoCDkdkQUbrIHtkD-SBrXp_APXnN_0:1qKMkU:XJmpFBx9mAYInCkKxzGWPxyI6JMLdxQfcIMibM2IW4c",
+            "expire_date": "2023-07-28T17:38:34.832Z"
+        }
+    },
+    {
+        "model": "token_blacklist.outstandingtoken",
+        "pk": 1,
+        "fields": {
+            "user": null,
+            "jti": "40b360c890fc425fa9091f7868d3ce33",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4OTM1OTM3NiwiaWF0IjoxNjg5MzU1NDc2LCJqdGkiOiI0MGIzNjBjODkwZmM0MjVmYTkwOTFmNzg2OGQzY2UzMyIsInVzZXJfaWQiOjJ9.wLWr8SnnoFHtR-8DjfUgGB2Hir1HJ9NRF6fpOnbQtpE",
+            "created_at": null,
+            "expires_at": "2023-07-14T18:29:36Z"
+        }
+    },
+    {
+        "model": "token_blacklist.outstandingtoken",
+        "pk": 2,
+        "fields": {
+            "user": 2,
+            "jti": "ee29b1316f9c4877bfc85b2ab05856ad",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4OTM1OTc1MCwiaWF0IjoxNjg5MzU1ODUwLCJqdGkiOiJlZTI5YjEzMTZmOWM0ODc3YmZjODViMmFiMDU4NTZhZCIsInVzZXJfaWQiOjJ9.YjbjxLxfqDU6kK-4LEj1yVSlLOtJXsTJYTCKNSW1LHY",
+            "created_at": "2023-07-14T17:30:50.594Z",
+            "expires_at": "2023-07-14T18:35:50Z"
+        }
+    },
+    {
+        "model": "token_blacklist.blacklistedtoken",
+        "pk": 1,
+        "fields": { "token": 1, "blacklisted_at": "2023-07-14T17:29:17.508Z" }
+    },
+    {
+        "model": "entry.entry",
+        "pk": 1,
+        "fields": {
+            "user": 3,
+            "created_at": "2023-02-08T17:37:19.165Z",
+            "updated_at": "2023-07-14T18:08:46.404Z",
+            "weight": 198,
+            "height": 69,
+            "systolic": 120,
+            "diastolic": 80,
+            "blood_glucose": 85,
+            "resting_metabolic_rate": 1700,
+            "cholesterol": 120,
+            "low_density_lipoprotein": 135,
+            "high_density_lipoprotein": 50,
+            "triglycerides": 150,
+            "vo2": 35,
+            "sleep_score": 75,
+            "stress_score": 30,
+            "comments": "Average adult male"
+        }
+    },
+    {
+        "model": "entry.entry",
+        "pk": 2,
+        "fields": {
+            "user": 3,
+            "created_at": "2023-04-11T17:40:47.475Z",
+            "updated_at": "2023-07-14T18:08:04.184Z",
+            "weight": 200,
+            "height": 69,
+            "systolic": 125,
+            "diastolic": 82,
+            "blood_glucose": 87,
+            "resting_metabolic_rate": 1790,
+            "cholesterol": 127,
+            "low_density_lipoprotein": 142,
+            "high_density_lipoprotein": 56,
+            "triglycerides": 150,
+            "vo2": 34,
+            "sleep_score": 70,
+            "stress_score": 37,
+            "comments": null
+        }
+    },
+    {
+        "model": "entry.entry",
+        "pk": 3,
+        "fields": {
+            "user": 3,
+            "created_at": "2023-05-25T17:43:51.404Z",
+            "updated_at": "2023-07-14T18:06:59.036Z",
+            "weight": 202,
+            "height": 69,
+            "systolic": 127,
+            "diastolic": 82,
+            "blood_glucose": 90,
+            "resting_metabolic_rate": 1800,
+            "cholesterol": 130,
+            "low_density_lipoprotein": 140,
+            "high_density_lipoprotein": 53,
+            "triglycerides": 154,
+            "vo2": 34,
+            "sleep_score": 60,
+            "stress_score": 40,
+            "comments": "Hasn't been sleeping too well"
+        }
+    },
+    {
+        "model": "entry.entry",
+        "pk": 4,
+        "fields": {
+            "user": 3,
+            "created_at": "2023-06-07T17:46:57.508Z",
+            "updated_at": "2023-07-14T18:05:31.825Z",
+            "weight": 198,
+            "height": 69,
+            "systolic": 123,
+            "diastolic": 78,
+            "blood_glucose": 80,
+            "resting_metabolic_rate": 1730,
+            "cholesterol": 120,
+            "low_density_lipoprotein": 140,
+            "high_density_lipoprotein": 50,
+            "triglycerides": 150,
+            "vo2": 37,
+            "sleep_score": 72,
+            "stress_score": 23,
+            "comments": null
+        }
+    },
+    {
+        "model": "entry.entry",
+        "pk": 5,
+        "fields": {
+            "user": 3,
+            "created_at": "2023-07-14T17:46:57.508Z",
+            "updated_at": "2023-07-14T17:46:57.508Z",
+            "weight": 195,
+            "height": 69,
+            "systolic": 118,
+            "diastolic": 78,
+            "blood_glucose": 84,
+            "resting_metabolic_rate": 1650,
+            "cholesterol": 118,
+            "low_density_lipoprotein": 137,
+            "high_density_lipoprotein": 58,
+            "triglycerides": 148,
+            "vo2": 38,
+            "sleep_score": 80,
+            "stress_score": 20,
+            "comments": null
+        }
+    }
+]

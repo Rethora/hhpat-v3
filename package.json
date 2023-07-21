@@ -1,0 +1,11 @@
+{
+  "name": "hhpat-v3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Rethora/hhpat-v3.git",
+  "author": "Dane Roelofs <dane.l.roelofs@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

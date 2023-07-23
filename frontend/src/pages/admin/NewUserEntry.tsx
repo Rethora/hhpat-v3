@@ -90,6 +90,7 @@ export const NewUserEntry = () => {
 
   return (
     <React.Fragment>
+      <h1 className="my-4 text-center">New Entry for {user.first_name}</h1>
       <Formik
         initialValues={formValues}
         validate={validate}

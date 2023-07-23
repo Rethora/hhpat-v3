@@ -19,6 +19,7 @@ export const clientRoutes = {
     newUserEntry: "/admin/users/:userId/entries/new/",
     allUserEntries: "/admin/users/:userId/entries/all/",
     singleUserEntry: "/admin/users/:userId/entries/:entryId/",
+    singleUserGraph: "/admin/users/:userId/graph/",
   },
   authShared: {
     profile: "/profile/",

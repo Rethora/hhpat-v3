@@ -6,6 +6,7 @@ import { useAppSelector } from "hooks/useAppSelector";
 import { Link, useParams } from "react-router-dom";
 import { clientRoutes } from "routes/clientRoutes";
 import { ELoadingStatus } from "types";
+import { PositiveButton } from "components/PositiveButton";
 
 export const ShowUser = () => {
   const { userId } = useParams();
@@ -23,6 +24,15 @@ export const ShowUser = () => {
   return (
     <>
       Email: {user.email}
+      <br />
+      <Link
+        to={clientRoutes.admin.singleUserGraph.replace(
+          ":userId",
+          user.id.toString()
+        )}
+      >
+        <PositiveButton>Graph</PositiveButton>
+      </Link>
       <br />
       Entries:
       <br />

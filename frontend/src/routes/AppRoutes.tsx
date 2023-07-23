@@ -24,6 +24,7 @@ import { NonAdminLayout } from "layouts/NonAdminLayout";
 import { NonAdminDashboard } from "pages/nonAdmin/NonAdminDashboard";
 import { ListEntries } from "pages/nonAdmin/ListEntries";
 import { ShowEntry } from "pages/nonAdmin/ShowEntry";
+import { ShowUserGraph } from "pages/admin/ShowUserGraph";
 
 export const AppRoutes = () => {
   const isAuthenticated = useIsAuthenticated();
@@ -129,6 +130,10 @@ export const AppRoutes = () => {
                     {
                       path: "users/:userId/",
                       element: <ShowUser />,
+                    },
+                    {
+                      path: "users/:userId/graph/",
+                      element: <ShowUserGraph />,
                     },
                     {
                       path: "users/:userId/entries/new/",

@@ -1,11 +1,8 @@
 import Button, { ButtonProps } from "@mui/base/Button";
 import React from "react";
 
-export const NeutralButton = React.forwardRef(function PositiveButton(
-  props: ButtonProps,
-  ref: React.ForwardedRef<HTMLButtonElement>
-) {
-  return (
+export const NeutralButton = React.forwardRef(
+  (props: ButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) => (
     <Button
       ref={ref}
       {...props}
@@ -15,5 +12,5 @@ export const NeutralButton = React.forwardRef(function PositiveButton(
         }),
       }}
     />
-  );
-});
+  )
+);

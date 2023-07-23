@@ -8,11 +8,11 @@ interface IInputProps {
   };
 }
 
-export const Input = React.forwardRef(function Input(
-  props: InputProps & IInputProps,
-  ref: React.ForwardedRef<HTMLInputElement>
-) {
-  return (
+export const Input = React.forwardRef(
+  (
+    props: InputProps & IInputProps,
+    ref: React.ForwardedRef<HTMLInputElement>
+  ) => (
     <div>
       <label className={props.labelprops.className} htmlFor={props.name}>
         {props.labelprops.title}
@@ -32,5 +32,5 @@ export const Input = React.forwardRef(function Input(
         }}
       />
     </div>
-  );
-});
+  )
+);

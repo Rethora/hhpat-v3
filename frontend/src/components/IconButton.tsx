@@ -1,11 +1,8 @@
 import React from "react";
 import Button, { ButtonProps } from "@mui/base/Button";
 
-export const IconButton = React.forwardRef(function IconButton(
-  props: ButtonProps,
-  ref: React.ForwardedRef<HTMLButtonElement>
-) {
-  return (
+export const IconButton = React.forwardRef(
+  (props: ButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) => (
     <Button
       ref={ref}
       {...props}
@@ -16,5 +13,5 @@ export const IconButton = React.forwardRef(function IconButton(
         },
       }}
     />
-  );
-});
+  )
+);

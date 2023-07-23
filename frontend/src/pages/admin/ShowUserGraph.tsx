@@ -115,7 +115,7 @@ export const ShowUserGraph = () => {
     );
   }
 
-  if (!user.entries) {
+  if (!user.entries || user.entries.length === 0) {
     return (
       <Center>
         <React.Fragment>No Entries Yet</React.Fragment>

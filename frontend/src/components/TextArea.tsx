@@ -13,7 +13,7 @@ export const TextArea = (props: ITextAreaProps) => (
       {...props}
       className={
         props.className +
-        " input-shadow h-40 resize-none rounded-lg border-2 border-solid bg-offWhite px-2 focus:outline-neutral"
+        " input-shadow h-40 resize-none rounded-lg border-2 border-solid px-2 focus:outline-neutral"
       }
     />
   </div>

@@ -6,7 +6,6 @@ import { Formik, FormikErrors } from "formik";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Input } from "components/Input";
-import { InputAdornment } from "components/InputAdornmnent";
 import { IconButton } from "components/IconButton";
 import { PositiveButton } from "components/PositiveButton";
 import { ELoadingStatus } from "types";
@@ -79,7 +78,7 @@ export const SignIn = () => {
   return (
     <React.Fragment>
       <div className="flex h-3/4 flex-col items-center justify-center">
-        <h1>Sign In</h1>
+        <h1 className="my-4">Sign In</h1>
         <Formik
           initialValues={initialValues}
           validate={validate}
@@ -125,17 +124,19 @@ export const SignIn = () => {
                   autoComplete="current-password"
                   required
                   endAdornment={
-                    <InputAdornment>
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <FontAwesomeIcon width={20} icon={faEyeSlash} />
-                        ) : (
-                          <FontAwesomeIcon width={20} icon={faEye} />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
+                    <div className="relative">
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <FontAwesomeIcon width={20} icon={faEyeSlash} />
+                          ) : (
+                            <FontAwesomeIcon width={20} icon={faEye} />
+                          )}
+                        </IconButton>
+                      </div>
+                    </div>
                   }
                 />
                 <span className="error-span">

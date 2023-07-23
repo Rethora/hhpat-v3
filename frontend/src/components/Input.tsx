@@ -24,10 +24,10 @@ export const Input = React.forwardRef(
           root: state => ({
             className: `${
               state.focused ? "border-neutral" : "border-grey"
-            } border-solid border-2 rounded-lg h-9 px-2 flex input-shadow`,
+            } border-solid border-2 rounded-lg h-9 flex input-shadow`,
           }),
           input: {
-            className: "outline-none bg-offWhite h-full w-full",
+            className: "outline-none h-full w-full px-2 rounded-lg",
           },
         }}
       />

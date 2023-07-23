@@ -1,4 +1,6 @@
+import { Center } from "components/Center";
 import { Input } from "components/Input";
+import { Loading } from "components/Loading";
 import { PositiveButton } from "components/PositiveButton";
 import { createUser, resetLoadingState } from "features/user/userSlicer";
 import { Formik, FormikErrors } from "formik";
@@ -79,6 +81,14 @@ export const NewUser = () => {
   const onSubmit = (values: IFormValues) => {
     dispatch(createUser({ ...values, username: values.email }));
   };
+
+  if (createUserLoadingStatus.status === ELoadingStatus.PENDING) {
+    return (
+      <Center>
+        <Loading />
+      </Center>
+    );
+  }
 
   return (
     <React.Fragment>

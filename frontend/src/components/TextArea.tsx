@@ -1,12 +1,16 @@
 interface ITextAreaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  labelprops: { title: string; className?: string };
+  labelprops: { label: string; className?: string };
+  id: string;
+  error?: boolean;
+  errortext?: string;
+  helpertext?: string;
 }
 
 export const TextArea = (props: ITextAreaProps) => (
   <div>
-    <label className={props.labelprops.className} htmlFor={props.name}>
-      {props.labelprops.title}
+    <label className={props.labelprops.className} htmlFor={props.id}>
+      {props.labelprops.label}
     </label>
     <br />
     <textarea
@@ -16,5 +20,10 @@ export const TextArea = (props: ITextAreaProps) => (
         " input-shadow h-40 resize-none rounded-lg border-2 border-solid px-2 focus:outline-neutral"
       }
     />
+    {props.error ? (
+      <div className="text-negative">{props.errortext}</div>
+    ) : (
+      props.helpertext && <div>{props.helpertext}</div>
+    )}
   </div>
 );

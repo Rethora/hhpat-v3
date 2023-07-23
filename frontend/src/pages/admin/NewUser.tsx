@@ -108,59 +108,53 @@ export const NewUser = () => {
             handleSubmit,
           }) => (
             <form onSubmit={handleSubmit}>
-              <div className="input-with-error">
-                <Input
-                  name="first_name"
-                  labelprops={{ title: "First Name" }}
-                  placeholder="First Name"
-                  type="text"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.first_name}
-                  autoComplete="first_name"
-                  required
-                  autoFocus
-                />
-                <span className="error-span">
-                  {errors.first_name && touched.first_name && errors.first_name}
-                </span>
-              </div>
-              <div className="input-with-error">
-                <Input
-                  name="last_name"
-                  labelprops={{
-                    title: "Last Name",
-                  }}
-                  placeholder="Last Name"
-                  type="text"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.last_name}
-                  autoComplete="last_name"
-                  required
-                />
-                <span className="error-span">
-                  {errors.last_name && touched.last_name && errors.last_name}
-                </span>
-              </div>
-              <div className="input-with-error">
-                <Input
-                  name="email"
-                  labelprops={{
-                    title: "Email",
-                  }}
-                  placeholder="Email"
-                  type="email"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.email}
-                  autoComplete="email"
-                  required
-                />
-                <span className="error-span">
-                  {errors.email && touched.email && errors.email}
-                </span>
-              </div>
+              <Input
+                id="first_name"
+                name="first_name"
+                labelprops={{ label: "First Name" }}
+                placeholder="First Name"
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.first_name}
+                autoComplete="first_name"
+                required
+                autoFocus
+                error={Boolean(errors.first_name && touched.first_name)}
+                errortext={errors.first_name}
+              />
+              <Input
+                id="last_name"
+                name="last_name"
+                labelprops={{
+                  label: "Last Name",
+                }}
+                placeholder="Last Name"
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.last_name}
+                autoComplete="last_name"
+                required
+                error={Boolean(errors.last_name && touched.last_name)}
+                errortext={errors.last_name}
+              />
+              <Input
+                id="email"
+                name="email"
+                labelprops={{
+                  label: "Email",
+                }}
+                placeholder="Email"
+                type="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+                autoComplete="email"
+                required
+                error={Boolean(errors.email && touched.email)}
+                errortext={errors.email}
+              />
               <div className="flex justify-end">
                 <PositiveButton type="submit">Submit</PositiveButton>
               </div>

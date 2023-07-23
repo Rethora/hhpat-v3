@@ -93,56 +93,50 @@ export const SignIn = () => {
             handleSubmit,
           }) => (
             <form onSubmit={handleSubmit}>
-              <div className="input-with-error">
-                <Input
-                  name="username"
-                  labelprops={{ title: "Email or Username" }}
-                  placeholder="Email or Username"
-                  aria-label="username"
-                  type="text"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.username}
-                  autoComplete="username"
-                  autoFocus
-                  required
-                />
-                <span className="error-span">
-                  {errors.username && touched.username && errors.username}
-                </span>
-              </div>
-              <div className="input-with-error">
-                <Input
-                  name="password"
-                  labelprops={{ title: "Password" }}
-                  placeholder="Password"
-                  aria-label="password"
-                  type={showPassword ? "text" : "password"}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                  autoComplete="current-password"
-                  required
-                  endAdornment={
-                    <div className="relative">
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                        <IconButton
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <FontAwesomeIcon width={20} icon={faEyeSlash} />
-                          ) : (
-                            <FontAwesomeIcon width={20} icon={faEye} />
-                          )}
-                        </IconButton>
-                      </div>
+              <Input
+                id="username"
+                name="username"
+                labelprops={{ label: "Email or Username" }}
+                placeholder="Email or Username"
+                type="text"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.username}
+                autoComplete="username"
+                autoFocus
+                required
+                error={Boolean(errors.username && touched.username)}
+                errortext={errors.username}
+              />
+              <Input
+                id="password"
+                name="password"
+                labelprops={{ label: "Password" }}
+                placeholder="Password"
+                type={showPassword ? "text" : "password"}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+                autoComplete="current-password"
+                required
+                error={Boolean(errors.password && touched.password)}
+                errortext={errors.password}
+                endAdornment={
+                  <div className="relative">
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <FontAwesomeIcon width={20} icon={faEyeSlash} />
+                        ) : (
+                          <FontAwesomeIcon width={20} icon={faEye} />
+                        )}
+                      </IconButton>
                     </div>
-                  }
-                />
-                <span className="error-span">
-                  {errors.password && touched.password && errors.password}
-                </span>
-              </div>
+                  </div>
+                }
+              />
               <div className="mt-8 flex justify-end">
                 <PositiveButton type="submit">Sign In</PositiveButton>
               </div>

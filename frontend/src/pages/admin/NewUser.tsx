@@ -1,17 +1,18 @@
+import { Formik, FormikErrors } from "formik";
+import { createUser, resetLoadingState } from "features/user/userSlicer";
+
 import { Center } from "components/Center";
+import { ELoadingStatus } from "types";
 import { Input } from "components/Input";
 import { Loading } from "components/Loading";
+import { Navigate } from "react-router-dom";
 import { PositiveButton } from "components/PositiveButton";
-import { createUser, resetLoadingState } from "features/user/userSlicer";
-import { Formik, FormikErrors } from "formik";
+import React from "react";
+import { clientRoutes } from "routes/clientRoutes";
+import { isEmpty } from "lodash";
 import { useAppDispatch } from "hooks/useAppDispatch";
 import { useAppSelector } from "hooks/useAppSelector";
-import { isEmpty } from "lodash";
 import { useSnackbar } from "notistack";
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { clientRoutes } from "routes/clientRoutes";
-import { ELoadingStatus } from "types";
 
 interface IFormValues {
   first_name: string;
@@ -155,7 +156,7 @@ export const NewUser = () => {
                 error={Boolean(errors.email && touched.email)}
                 errortext={errors.email}
               />
-              <div className="flex justify-end">
+              <div className="mt-4 flex justify-end">
                 <PositiveButton type="submit">Submit</PositiveButton>
               </div>
             </form>

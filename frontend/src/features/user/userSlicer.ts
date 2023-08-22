@@ -1,15 +1,16 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { signInFunctionParams } from "react-auth-kit/dist/types";
-import { apiRoutes } from "routes/apiRoutes";
-import { fetchAuthenticated, fetchNonAuthenticated } from "routes/fetch";
-import { ELoadingStatus, IEntry, IToken, IUser } from "types";
-import { getCookie } from "typescript-cookie";
 import {
   ACCESS_TOKEN_EXPIRE_IN,
   REFRESH_TOKEN_EXPIRE_IN,
   TOKEN_TYPE,
 } from "utils/config";
+import { ELoadingStatus, IEntry, IToken, IUser } from "types";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { fetchAuthenticated, fetchNonAuthenticated } from "routes/fetch";
+
 import { RootState } from "utils/store";
+import { apiRoutes } from "routes/apiRoutes";
+import { getCookie } from "typescript-cookie";
+import { signInFunctionParams } from "react-auth-kit/dist/types";
 
 interface ILoadingStatus {
   status: ELoadingStatus;
@@ -22,7 +23,8 @@ type TLoadingStatusKey =
   | "createUser"
   | "fetchOwnEntries"
   | "fetchEntriesByUserId"
-  | "createEntryForUser";
+  | "createEntryForUser"
+  | "deleteEntryForUser";
 
 type TLoadingStatus = {
   [K in TLoadingStatusKey]: ILoadingStatus;
@@ -44,6 +46,7 @@ const initialState: IUserState = {
     fetchOwnEntries: { status: ELoadingStatus.IDLE, errorMessage: null },
     fetchEntriesByUserId: { status: ELoadingStatus.IDLE, errorMessage: null },
     createEntryForUser: { status: ELoadingStatus.IDLE, errorMessage: null },
+    deleteEntryForUser: { status: ELoadingStatus.IDLE, errorMessage: null },
   },
 };
 
@@ -176,6 +179,31 @@ export const userSlicer = createSlice({
         user.entries.push(action.payload);
       }
     });
+    builder.addCase(deleteEntryForUser.pending, state => {
+      state.loadingStatus.deleteEntryForUser.status = ELoadingStatus.PENDING;
+      state.loadingStatus.deleteEntryForUser.errorMessage = null;
+    });
+    builder.addCase(deleteEntryForUser.rejected, state => {
+      state.loadingStatus.deleteEntryForUser.status = ELoadingStatus.REJECTED;
+      state.loadingStatus.deleteEntryForUser.errorMessage =
+        "Unable to delete entry";
+    });
+    builder.addCase(deleteEntryForUser.fulfilled, (state, action) => {
+      state.loadingStatus.deleteEntryForUser.status = ELoadingStatus.FULFILLED;
+      state.loadingStatus.deleteEntryForUser.errorMessage = null;
+
+      const user = state.users.find(u => u.id === action.meta.arg.entry.user);
+      if (user) {
+        if (!user.entries) {
+          user.entries = [];
+        }
+
+        const entryIdx = user.entries.findIndex(
+          e => e.id === action.meta.arg.entry.id
+        );
+        user.entries.splice(entryIdx, 1);
+      }
+    });
   },
 });
 
@@ -279,6 +307,16 @@ export const createEntryForUser = createAsyncThunk(
     const { data } = await fetchAuthenticated().post<IEntry>(
       apiRoutes.admin.usersEntries,
       entry
+    );
+    return data;
+  }
+);
+
+export const deleteEntryForUser = createAsyncThunk(
+  "users/deleteEntryForUser",
+  async ({ entry }: { entry: IEntry }) => {
+    const { data } = await fetchAuthenticated().delete(
+      `${apiRoutes.admin.usersEntries}${entry.id}/`
     );
     return data;
   }

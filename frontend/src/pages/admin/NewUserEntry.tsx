@@ -1,18 +1,21 @@
-import { Input } from "components/Input";
-import { PositiveButton } from "components/PositiveButton";
-import { TextArea } from "components/TextArea";
+import { ELoadingStatus, IEntry } from "types";
+import { Formik, FormikErrors, FormikHelpers } from "formik";
 import {
   createEntryForUser,
+  resetLoadingState,
   selectLastUserEntry,
   selectUserById,
 } from "features/user/userSlicer";
-import { Formik, FormikErrors } from "formik";
+
+import { Input } from "components/Input";
+import { PositiveButton } from "components/PositiveButton";
+import React from "react";
+import { TextArea } from "components/TextArea";
+import { enqueueSnackbar } from "notistack";
+import { formatInchesToFeetInches } from "utils/helpers";
 import { useAppDispatch } from "hooks/useAppDispatch";
 import { useAppSelector } from "hooks/useAppSelector";
-import React from "react";
 import { useParams } from "react-router-dom";
-import { IEntry } from "types";
-import { formatInchesToFeetInches } from "utils/helpers";
 
 interface IFormValues {
   weight: number | null;
@@ -63,6 +66,9 @@ export const NewUserEntry = () => {
   const lastUserEntry = useAppSelector(state =>
     selectLastUserEntry(state, user?.id || -1)
   );
+  const createEntryForUserLoadingStatus = useAppSelector(
+    state => state.users.loadingStatus.createEntryForUser.status
+  );
   const heightDisplayRef = React.useRef<HTMLDivElement>({} as HTMLDivElement);
 
   const formValues = React.useMemo(() => {
@@ -76,17 +82,26 @@ export const NewUserEntry = () => {
     return values;
   }, [lastUserEntry]);
 
+  const onSubmit = React.useCallback(
+    (values: IFormValues, formikHelpers: FormikHelpers<IFormValues>) => {
+      if (!userId) {
+        return;
+      }
+      const entry: Partial<IEntry> = { ...values, user: +userId };
+      dispatch(createEntryForUser({ entry }));
+      formikHelpers.resetForm();
+    },
+    [dispatch, userId]
+  );
+
   if (!user) {
     return <>User Not Found</>;
   }
 
-  const onSubmit = (values: IFormValues) => {
-    if (!userId) {
-      return;
-    }
-    const entry: Partial<IEntry> = { ...values, user: +userId };
-    dispatch(createEntryForUser({ entry }));
-  };
+  if (createEntryForUserLoadingStatus === ELoadingStatus.FULFILLED) {
+    dispatch(resetLoadingState("createEntryForUser"));
+    enqueueSnackbar("Entry created!", { variant: "success" });
+  }
 
   return (
     <React.Fragment>
@@ -279,23 +294,25 @@ export const NewUserEntry = () => {
               />
             </div>
             <div className="flex flex-wrap justify-center">
-              <div className="ml-2">
-                VO<sub>2</sub>
+              <div>
+                <div className="ml-2">
+                  VO<sub>2</sub>
+                </div>
+                <Input
+                  id="v02"
+                  labelprops={{ label: "" }}
+                  placeholder="VO2"
+                  name="vo2"
+                  autoComplete="vo2"
+                  value={values.vo2 || ""}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  type="number"
+                  className="mx-2 w-[250px]"
+                  error={Boolean(errors.vo2 && touched.vo2)}
+                  errortext={errors.vo2}
+                />
               </div>
-              <Input
-                id="v02"
-                labelprops={{ label: "" }}
-                placeholder="VO2"
-                name="vo2"
-                autoComplete="vo2"
-                value={values.vo2 || ""}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                type="number"
-                className="mx-2 w-[250px]"
-                error={Boolean(errors.vo2 && touched.vo2)}
-                errortext={errors.vo2}
-              />
               <Input
                 id="sleep_score"
                 labelprops={{ label: "Sleep Score", className: "ml-2" }}
